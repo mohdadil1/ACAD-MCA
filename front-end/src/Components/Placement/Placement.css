@@ -1,0 +1,16 @@
+.placement {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 80vh;
+	background-color: #9b5de5;
+}
+
+.yearTitle {
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding: 10px;
+}

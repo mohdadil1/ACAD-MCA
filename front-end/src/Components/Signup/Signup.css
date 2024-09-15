@@ -1,0 +1,70 @@
+.outcard {
+    padding: 25px;
+    margin-left: 22%;
+    width: 50%;
+    box-shadow: 0 1px 2px 1px #ddd;
+    border-radius: 3px;
+
+}
+
+.card {
+    box-shadow: 0 1px 2px 1px #ddd;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #eee;
+}
+
+.inputs {
+    width: 93%;
+    color: #444;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px 10px;
+}
+
+.btns {
+    background-color: #0050b1;
+    color: #fff;
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 3px;
+    border: none;
+}
+
+.center {
+    text-align: center;
+}
+.bg {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+        url('http://res.cloudinary.com/dyuw3dvko/image/upload/v1725829596/bg3_cjadtj.png');
+    background-size: fit; 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+@keyframes move-left-to-right-and-back {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(calc(100vw - 240px)); /* Adjust the value if necessary */
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.moving-text {
+    animation: move-left-to-right-and-back 10s linear infinite;
+    white-space: nowrap;
+    display: inline-block;
+    background: linear-gradient(90deg, #FF6B6B, #FFD93D, #6BCB77, #4D96FF, #6A4C93); 
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: bold;
+    pointer-events: none; /* Ensures it doesn’t interfere with input interactions */
+    z-index: 10; /* Keep it above the input field */
+}

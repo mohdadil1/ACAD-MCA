@@ -1,0 +1,58 @@
+{
+  "semester1": {
+      "subject1": {
+          "id": "subj1",
+          "subjectName": "abc1",
+          "subjectCode": "MATH101",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj2",
+          "subjectName": "Computer Organisation and Architecture",
+          "subjectCode": "COA101",
+          "credits": 3
+      }
+  },
+  "semester2": {
+      "subject1": {
+          "id": "subj3",
+          "subjectName": "Chemistry",
+          "subjectCode": "CHEM101",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj4",
+          "subjectName": "Biology",
+          "subjectCode": "BIO101",
+          "credits": 3
+      }
+  },
+  "semester3": {
+      "subject1": {
+          "id": "subj5",
+          "subjectName": "Computer Science",
+          "subjectCode": "CS101",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj6",
+          "subjectName": "Statistics",
+          "subjectCode": "STAT101",
+          "credits": 3
+      }
+  },
+  "semester4": {
+      "subject1": {
+          "id": "subj7",
+          "subjectName": "History",
+          "subjectCode": "HIST101",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj8",
+          "subjectName": "Geography",
+          "subjectCode": "GEO101",
+          "credits": 3
+      }
+  }
+}

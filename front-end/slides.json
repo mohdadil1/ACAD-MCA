@@ -1,0 +1,44 @@
+{
+    "math": [
+        {
+            "id": "1",
+            "heading": "Algebra Basics",
+            "title": "Introduction to Algebra",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        },
+        {
+            "id": "2",
+            "heading": "Geometry Essentials",
+            "title": "Understanding Shapes",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        }
+    ],
+    "science": [
+        {
+            "id": "1",
+            "heading": "Physics Fundamentals",
+            "title": "Laws of Motion",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        },
+        {
+            "id": "2",
+            "heading": "Chemistry Basics",
+            "title": "Elements and Compounds",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        }
+    ],
+    "history": [
+        {
+            "id": "1",
+            "heading": "Ancient Civilizations",
+            "title": "The Roman Empire",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        },
+        {
+            "id": "2",
+            "heading": "Modern History",
+            "title": "World War II",
+            "url": "https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+        }
+    ]
+}

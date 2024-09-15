@@ -1,0 +1,40 @@
+.section-content {
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  .section-wrapper {
+    margin-bottom: 16px;
+  }
+/* Light Theme */
+.table-container.light {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.table-container.light .bg-white {
+  background-color: #ffffff !important; /* Light background */
+}
+
+.table-container.light .text-gray-600 {
+  color: #666666 !important; /* Darker text for light mode */
+}
+
+/* Dark Theme */
+.table-container.dark {
+  background-color: #1e1e1e !important; /* Darker background */
+  color: #f0f0f0 !important; /* Lighter text */
+}
+
+.table-container.dark .bg-white {
+  background-color: #000000 !important; /* Darker background for dark mode */
+}
+
+.table-container.dark .text-gray-600 {
+  color: #cccccc !important; /* Adjust text color for readability in dark mode */
+}
+
+  
+  .table-container .text-gray-600 {
+    color: #cccccc !important; /* Adjust text color for readability in dark mode */
+  }
+  
+  
