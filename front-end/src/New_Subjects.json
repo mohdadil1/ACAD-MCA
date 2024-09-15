@@ -1,0 +1,172 @@
+{
+  "semester1": {
+      "subject1": {
+          "id": "subj1",
+          "subjectName": "Mathematical Foundation of Computer Application",
+          "subjectCode": "MA3101",
+          "credits": 4
+        
+      },
+    
+      "subject2": {
+          "id": "subj2",
+          "subjectName": "Probability and Statistical Computing",
+          "subjectCode": "MA3103",
+          "credits": 4
+      },
+      "subject3": {
+          "id": "subj3",
+          "subjectName": " Computer Programming and Problem Solving using C",
+          "subjectCode": "CA3101",
+          "credits": 4
+      },
+      "subject4": {
+        "id": "subj4",
+        "subjectName": "Computer Organization and Architecture",
+        "subjectCode": "CA3102",
+        "credits": 4
+    },
+    "subject5": {
+        "id": "subj5",
+        "subjectName": "Resource Management Techniques",
+        "subjectCode": "CA3104",
+        "credits": 4
+    }
+  },
+  "semester2": {
+      "subject1": {
+          "id": "subj6",
+          "subjectName": "Numerical Methods ",
+          "subjectCode": "MA3201",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj7",
+          "subjectName": "Object Oriented Programming using C++",
+          "subjectCode": "CA3201",
+          "credits": 4
+      },
+      "subject3": {
+        "id": "subj8",
+        "subjectName": "Data Structures ",
+        "subjectCode": "CA3202 ",
+        "credits": 4
+    },
+    "subject4": {
+        "id": "subj9",
+        "subjectName": "Object Oriented Analysis and Design ",
+        "subjectCode": "CA3203 ",
+        "credits": 4
+    },
+    "subject5": {
+        "id": "subj10",
+        "subjectName": "Operating System",
+        "subjectCode": "CA3203 ",
+        "credits": 4
+    }
+  },
+  "semester3": {
+      "subject1": {
+          "id": "subj11",
+          "subjectName": "Database Management System ",
+          "subjectCode": "CA3301",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj12",
+          "subjectName": "Computer Communication",
+          "subjectCode": "CA3302",
+          "credits": 4
+      },
+      "subject3": {
+          "id": "subj13",
+          "subjectName": "Design and Analysis of Algorithms ",
+          "subjectCode": "CA3303",
+          "credits": 4
+      },
+      "subject4": {
+          "id": "subj14",
+          "subjectName": "Computer Graphics ",
+          "subjectCode": "CA3304",
+          "credits": 4
+      },
+      "subject5": {
+          "id": "subj15",
+          "subjectName": "Java Programming ",
+          "subjectCode": "CA3305",
+          "credits": 4
+      }
+  },
+  "semester4": {
+      "subject1": {
+          "id": "subj16",
+          "subjectName": "Software Engineering ",
+          "subjectCode": "CA3401",
+          "credits": 4
+      },
+      "subject2": {
+          "id": "subj17",
+          "subjectName": "Artificial Intelligence",
+          "subjectCode": "CA3402",
+          "credits": 4
+      },
+      "subject3": {
+        "id": "subj18",
+        "subjectName": "Internet and Web Technology",
+        "subjectCode": "GEO101",
+        "credits": 4
+    },
+    "subject4": {
+        "id": "subj19",
+        "subjectName": "Theory of Computation",
+        "subjectCode": "CA3404 ",
+        "credits": 4
+    },
+    "subject5": {
+        "id": "subj20",
+        "subjectName": "Soft Computing",
+        "subjectCode": "CA3405",
+        "credits": 4
+    }
+  },
+  "semester5": {
+    "subject1": {
+        "id": "subj21",
+        "subjectName": "Financial Management  ",
+        "subjectCode": "HS3501",
+        "credits": 4
+    },
+    "subject2": {
+        "id": "subj22",
+        "subjectName": "Organization Behaviour and Management ",
+        "subjectCode": "HS3502 ",
+        "credits": 4
+    },
+    "subject3": {
+      "id": "subj23",
+      "subjectName": "Unix & Shell Programming ",
+      "subjectCode": "GEO101",
+      "credits": 4
+  },
+  "subject4": {
+      "id": "subj24",
+      "subjectName": "Python",
+      "subjectCode": "CA3502  ",
+      "credits": 4
+  },
+  "subject5": {
+      "id": "subj25",
+      "subjectName": "Pattern Recognition ",
+      "subjectCode": "CA3503",
+      "credits": 4
+  }
+},
+"semester6":{
+    "subject1": {
+        "id": "subj26",
+        "subjectName": "Thesis / Project  Industrial Project   ",
+        "subjectCode": "CA3601",
+        "credits": 20
+    }
+}
+}
