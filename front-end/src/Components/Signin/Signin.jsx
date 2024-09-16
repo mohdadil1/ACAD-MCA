@@ -49,8 +49,8 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
       if (res.status === 200) {
         setMessage('Signin success.');
         setIsSuccess(true);
-        sessionStorage.setItem('Token', res.data.token);
-        sessionStorage.setItem('Name', res.data.name);
+        localStorage.setItem('Token', res.data.token);
+        localStorage.setItem('Name', res.data.name);
         setToken(res.data.token);
         setName(res.data.name);
         
@@ -89,8 +89,8 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
         if (res.status === 200) {
           setMessage('Google Sign-in success.');
           setIsSuccess(true);
-             sessionStorage.setItem('Token', res.data.token);
-              sessionStorage.setItem('Name', res.data.name);
+             localStorage.setItem('Token', res.data.token);
+              localStorage.setItem('Name', res.data.name);
             setToken(res.data.token);
             setName(res.data.name);
             setTimeout(() => {
