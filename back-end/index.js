@@ -13,7 +13,7 @@ const app = express();
 const isAuthenticated = require('./controller/user').isAuthenticated;
 
 
-
+app.set('trust proxy', 1);
 // CORS setup
 const corsOptions = {
   origin: process.env.FRONT_END,  // Frontend URL
