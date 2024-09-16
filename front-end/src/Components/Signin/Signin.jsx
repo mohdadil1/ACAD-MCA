@@ -18,7 +18,8 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
 
   axios.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem('Token'); // Ensure consistency in token key
+      const token = localStorage.getItem('Token');
+      
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }
@@ -31,7 +32,8 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem('Token'); // Ensure consistency in token key
+        localStorage.removeItem('Token');
+        localStorage.removeItem('Name'); 
         window.location.href = '/signin';
       }
       return Promise.reject(error);
@@ -79,7 +81,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
         }, 500);
 
       } else {
-        setMessage(res.data.message);
+        setMessage(res.data.message || 'Signin failed.');
         setIsSuccess(false);
       }
     } catch (err) {
