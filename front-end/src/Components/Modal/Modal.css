@@ -46,7 +46,7 @@
 .modal {
     display: none;
     position: fixed;
-    top: 0;
+    top: 1.5rem;
     width: 100%;
     z-index: 1050;
     outline: 0;
