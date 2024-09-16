@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto; /* Center the modal-dialog with equal margins on all sides */
+    margin: auto; /* Center the modal-dialog with equal margins on all sides */
 }
 
 .modal-content {
