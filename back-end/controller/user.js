@@ -366,6 +366,12 @@ const signin = (req, res) => {
                 { expiresIn: '1h' }                  // Token expiration time (1 hour)
             );
 
+            res.cookie('authToken', token, {
+                httpOnly: true,  // Prevents client-side JavaScript from accessing the cookie
+                secure: true,    // Ensures the cookie is only sent over HTTPS
+                sameSite: 'None' // Allows cross-site requests, but requires secure (HTTPS)
+            });
+            
             try {
                 await sendSigninEmail(user.email, user.name);
                 return res.status(200).send({
