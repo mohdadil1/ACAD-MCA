@@ -1,7 +1,7 @@
-import './App.css'
+import './App.css';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom';
-import axios from 'axios'; 
+import axios from 'axios';
 import Signup from './Components/Signup/Signup';
 import Signin from './Components/Signin/Signin';
 import ForgetPassword from './Components/ForgotPassword/ForgotPassword';
@@ -23,12 +23,7 @@ const ProtectedRoute = ({ isAuthenticated, children }) => {
   }
   return (
     <>
-      <NavBar 
-        name={children.props.name}
-        setName={children.props.setName}
-        setToken={children.props.setToken}
-        setIsAuthenticated={children.props.setIsAuthenticated}
-      />
+      <NavBar />
       {children}
     </>
   );
@@ -37,42 +32,50 @@ const ProtectedRoute = ({ isAuthenticated, children }) => {
 function App() {
   const [name, setName] = useState('');
   const [token, setToken] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     const checkSession = async () => {
-      try {
-        const res = await axios.get('/check-auth', { withCredentials: true });
-        
+      const storedToken = localStorage.getItem('Token'); // Get token from localStorage
 
-        if (res.status === 200 && res.data.user) {
-          setIsAuthenticated(true);
-          setName(res.data.user);
-        } else {
+      if (storedToken) {
+        try {
+          const res = await axios.get('/check-auth', {
+            headers: { Authorization: `Bearer ${storedToken}` },
+            withCredentials: true
+          });
+          if (res.status === 200 && res.data.user) {
+            setIsAuthenticated(true);
+            setName(res.data.user);
+            setToken(storedToken);
+          } else {
+            setIsAuthenticated(false);
+            localStorage.removeItem('Token');
+          }
+        } catch (error) {
+          console.error('Session check failed:', error.response ? error.response.data : error.message);
           setIsAuthenticated(false);
+          localStorage.removeItem('Token');
         }
-      } catch (error) {
-       // console.error('Session check failed:', error.response ? error.response.data : error.message);
+      } else {
         setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-        setShowSpinner(false);
       }
+      setIsLoading(false);
+      setShowSpinner(false);
     };
 
     checkSession();
   }, []);
 
   useEffect(() => {
-    setShowSpinner(true);
     const handleRouteChange = () => {
-      
+      setShowSpinner(true);
       const timer = setTimeout(() => {
         setShowSpinner(false);
-      }, 800); 
+      }, 800); // Adjust timing if needed
       return () => clearTimeout(timer);
     };
 
