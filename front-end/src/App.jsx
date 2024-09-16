@@ -67,8 +67,9 @@ function App() {
   }, []);
 
   useEffect(() => {
+    setShowSpinner(true);
     const handleRouteChange = () => {
-      setShowSpinner(true);
+      
       const timer = setTimeout(() => {
         setShowSpinner(false);
       }, 800); 
