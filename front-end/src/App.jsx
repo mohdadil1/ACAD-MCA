@@ -16,14 +16,20 @@ import About from './Components/About/About';
 import Spinner from './Components/Spinner/Spinner';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+axios.defaults.withCredentials = true;  
 
-const ProtectedRoute = ({ isAuthenticated, children }) => {
+const ProtectedRoute = ({ isAuthenticated, children, ...rest }) => {
   if (!isAuthenticated) {
     return <Navigate to="/signin" />;
   }
   return (
     <>
-      <NavBar />
+      <NavBar 
+        name={rest.name}
+        setName={rest.setName}
+        setToken={rest.setToken}
+        setIsAuthenticated={rest.setIsAuthenticated}
+      />
       {children}
     </>
   );
@@ -31,7 +37,7 @@ const ProtectedRoute = ({ isAuthenticated, children }) => {
 
 function App() {
   const [name, setName] = useState('');
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(localStorage.getItem('Token') || ''); 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
@@ -39,48 +45,70 @@ function App() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const storedToken = localStorage.getItem('Token'); // Get token from localStorage
-
-      if (storedToken) {
-        try {
-          const res = await axios.get('/check-auth', {
-            headers: { Authorization: `Bearer ${storedToken}` },
-            withCredentials: true
-          });
-          if (res.status === 200 && res.data.user) {
-            setIsAuthenticated(true);
-            setName(res.data.user);
-            setToken(storedToken);
-          } else {
-            setIsAuthenticated(false);
+      try {
+        // 1. Check if session exists in MongoDB (via cookies)
+        const sessionRes = await axios.get('/check-session', { withCredentials: true });
+       
+        if (sessionRes.status === 200 && sessionRes.data.user) {
+          // Valid session found
+          setIsAuthenticated(true);
+          setName(sessionRes.data.user);
+        } else if (token) {
+          // 2. Fallback to token if no valid session
+          try {
+            const tokenRes = await axios.get('/check-auth', {
+              headers: { Authorization: `Bearer ${token}` },
+              withCredentials: true
+            });
+            if (tokenRes.status === 200 && tokenRes.data.message) {
+              // Token is valid, re-establish session
+              setIsAuthenticated(true);
+              
+            } else {
+              // Token is invalid or expired
+              localStorage.removeItem('Token');
+              setToken('');
+              setIsAuthenticated(false);
+            }
+          } catch (error) {
+            // Handle error when checking token
             localStorage.removeItem('Token');
+            setToken('');
+            setIsAuthenticated(false);
           }
-        } catch (error) {
-          console.error('Session check failed:', error.response ? error.response.data : error.message);
+        } else {
           setIsAuthenticated(false);
-          localStorage.removeItem('Token');
         }
-      } else {
+      } catch (error) {
+        // Handle error and reset authentication state
+        localStorage.removeItem('Token');
+        setToken('');
         setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+        setShowSpinner(false);
       }
-      setIsLoading(false);
-      setShowSpinner(false);
     };
 
     checkSession();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      setShowSpinner(true);
-      const timer = setTimeout(() => {
-        setShowSpinner(false);
-      }, 800); // Adjust timing if needed
-      return () => clearTimeout(timer);
-    };
+    setShowSpinner(true);
+    const timer = setTimeout(() => {
+      setShowSpinner(false);
+    }, 800); 
 
-    handleRouteChange();
+    return () => clearTimeout(timer);
   }, [location]);
+
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [token]);
 
   if (isLoading || showSpinner) {
     return <Spinner />;
@@ -99,91 +127,56 @@ function App() {
         <Route 
           path="/" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Home 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Home />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/classroom" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Classroom 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Classroom />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/coding" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Coding 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Coding />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/about-us" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <About 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <About />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/classroom/:semester" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Semester 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Semester />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/classroom/:semester/:subject" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Subjects 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Subjects />
             </ProtectedRoute>
           } 
         />
         <Route 
           path="/contact-us" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <About 
-                name={name}
-                setName={setName}
-                setToken={setToken}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <About />
             </ProtectedRoute>
           } 
         />
