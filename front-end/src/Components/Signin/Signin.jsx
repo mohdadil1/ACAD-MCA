@@ -2,19 +2,41 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"; // Corrected import for Heroicons v2
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import './Signin.css';
 
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 
-function Signin({ setName, setToken ,setIsAuthenticated }) {
+function Signin({ setName, setToken, setIsAuthenticated }) {
   const navigate = useNavigate();
-  const [emailInput, setEmailInput] = useState(''); 
+  const [emailInput, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // For toggling password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false); 
-  const [loading, setLoading] = useState(false); // Loading state
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  axios.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('Token'); // Ensure consistency in token key
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('Token'); // Ensure consistency in token key
+        window.location.href = '/signin';
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -26,24 +48,21 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
       setIsSuccess(false);
       return;
     }
-     
+
     setLoading(true);
+
     if (password.length < 6) {
       setMessage('Password must be at least 6 characters long.');
       setIsSuccess(false);
+      setLoading(false);
       return;
     }
 
     try {
       const res = await axios.post(
         `${apiUrl}/signin`,
-        {
-          email: emailInput,
-          password: password
-        },
-        {
-          withCredentials: true,
-        }
+        { email: emailInput, password },
+        { withCredentials: true }
       );
 
       if (res.status === 200) {
@@ -53,61 +72,57 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
         localStorage.setItem('Name', res.data.name);
         setToken(res.data.token);
         setName(res.data.name);
-        
+
         setTimeout(() => {
           setIsAuthenticated(true);
-          navigate('/'); 
+          navigate('/');
         }, 500);
-      
+
       } else {
         setMessage(res.data.message);
         setIsSuccess(false);
       }
     } catch (err) {
       console.error('Error:', err);
-      if (err.response) {
-        setMessage(err.response.data.message || 'An error occurred.');
-      } else {
-        setMessage('An error occurred.');
-      }
+      setMessage(err.response?.data?.message || 'An error occurred.');
       setIsSuccess(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-        const res = await axios.post(
-            `${apiUrl}/gsignin`,
-            {
-                idToken: credentialResponse.credential,
-            },
-            {
-                withCredentials: true,
-            }
-        );
+      const res = await axios.post(
+        `${apiUrl}/gsignin`,
+        { idToken: credentialResponse.credential },
+        { withCredentials: true }
+      );
 
-        if (res.status === 200) {
-          setMessage('Google Sign-in success.');
-          setIsSuccess(true);
-             localStorage.setItem('Token', res.data.token);
-              localStorage.setItem('Name', res.data.name);
-            setToken(res.data.token);
-            setName(res.data.name);
-            setTimeout(() => {
-              setIsAuthenticated(true);
-              navigate('/')
-            }, 1000);
-        } else {
-            setMessage(res.data.message || 'Google sign-in failed.');
-            setIsSuccess(false);
-        }
-    } catch (err) {
-        console.error('Google sign-in error:', err);
-        setMessage(err.response?.data?.message || 'Google sign-in error.');
+      if (res.status === 200) {
+        setMessage('Google Sign-in success.');
+        setIsSuccess(true);
+        localStorage.setItem('Token', res.data.token);
+        localStorage.setItem('Name', res.data.name);
+        setToken(res.data.token);
+        setName(res.data.name);
+
+        setTimeout(() => {
+          setIsAuthenticated(true);
+          navigate('/');
+        }, 1000);
+
+      } else {
+        setMessage(res.data.message || 'Google sign-in failed.');
         setIsSuccess(false);
+      }
+    } catch (err) {
+      console.error('Google sign-in error:', err);
+      setMessage(err.response?.data?.message || 'Google sign-in error.');
+      setIsSuccess(false);
     }
-};
-  
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -119,7 +134,7 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
       </div>
       <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg rounded-xl bg-white bg-opacity-90">
         <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">SIGN IN</h1>
-        
+
         <form onSubmit={handleSubmit}>
           <label className="block mb-2 text-gray-700 font-semibold">Email</label>
           <input
@@ -129,7 +144,7 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
             type="email"
             required
           />
-          
+
           <label className="block mb-2 text-gray-700 font-semibold">Password</label>
           <div className="relative mb-6">
             <input
@@ -151,14 +166,14 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
               )}
             </div>
           </div>
-          
-            <button
-             type="submit"
-             className={`bg-gradient-to-r from-blue-600 to-blue-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
-              disabled={loading}
-           > 
-              {loading ? 'Submitting...' : 'SUBMIT'}
-              </button>
+
+          <button
+            type="submit"
+            className={`bg-gradient-to-r from-blue-600 to-blue-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
+          >
+            {loading ? 'Submitting...' : 'SUBMIT'}
+          </button>
         </form>
 
         {message && (
@@ -181,7 +196,7 @@ function Signin({ setName, setToken ,setIsAuthenticated }) {
               setMessage('Google sign-in failed.');
               setIsSuccess(false);
             }}
-            auto_select={false} 
+            auto_select={false}
           />
         </div>
       </div>
