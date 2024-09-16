@@ -77,14 +77,13 @@ app.post('/submitotp', require('./controller/user').submitotp);
 app.post('/logout',require('./controller/user').logout);
 
 
-app.get('/check-auth', (req, res) => {
+app.get('/check-auth',isAuthenticated, (req, res) => {
   if (req.session.userId) {
     res.status(200).json({ user: req.session.userName });
   } else {
     res.status(401).json({ message: 'User not authenticated' });
   }
 });
-
 // Protected route (requires authentication)
 app.get('/protected-route', isAuthenticated, (req, res) => {
   res.json({ message: `Welcome, ${req.session.username}!` });
