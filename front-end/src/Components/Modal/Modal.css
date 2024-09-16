@@ -2,7 +2,7 @@
 .modal-header {
     position: relative;
     padding: 1rem !important;
-    background-color: #1c2833;  
+    background-color: #1c2833;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -24,7 +24,7 @@
     flex: 1 1 auto !important;
     padding: 1rem !important;
     position: relative !important;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
 .h5, h5 {
@@ -45,27 +45,30 @@
 
 .modal {
     display: none;
+    height: 100%;
+    left: 0;
+    outline: 0;
+    overflow: hidden;
     position: fixed;
-    top: 1.5rem;
+    top: 0;
     width: 100%;
     z-index: 1050;
-    outline: 0;
 }
 
 .modal-dialog {
     max-width: 80%;
-    height: 90vh;
+    height: 100vh;
     margin: 1.75rem auto;
-    
 }
 
 .modal-content {
-    height: 100%; 
+    height: 100%;
     display: flex;
     flex-direction: column;
+    border: 2px solid #000; 
 }
 
-/* Large Screen Styles */
+
 @media (min-width: 1200px) {
     .modal-dialog {
         max-width: 60%;  /* Reduced width for large screens */
@@ -102,32 +105,17 @@
     }
 }
 
-@media (max-width: 576px) {
-    .modal-header {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center;
-        padding: 0.5rem !important;
-    }
-
-    .modal-title {
-        font-size: 1rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .modal-body {
-        padding: 0.5rem !important;
-    }
-}
-
+/* For small devices, maintain margins */
 @media (max-width: 768px) {
     .modal-dialog {
         max-width: 90%;
-        height: 80vh;
+        height: 90vh;
+        margin: 1.75rem auto; /* Retains margin while making it full height */
     }
 
     .modal-content {
         height: auto;
+        border: 2px solid #000; /* Solid border remains for small screens */
     }
 
     .close-button {
@@ -137,15 +125,17 @@
     }
 }
 
+/* For very small screens (576px and below) */
 @media (max-width: 576px) {
     .modal-dialog {
         max-width: 95%;
-        height: 70vh;
+        height: 85vh;  /* Ensures there's still a margin around the modal */
         margin: 1rem auto;
     }
 
     .modal-content {
         height: auto;
+        border: 2px solid #000; /* Solid border remains for extra small screens */
     }
 
     .close-button {
