@@ -750,12 +750,21 @@ const logout=(req, res) => {
       res.status(200).json({ message: 'Logout successful' });
     });
   };
-  function isAuthenticated(req, res, next) {
-    if (req.session && req.session.userId) {
-      return next();
-    }
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
+ const isAuthenticated = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+    console.log("authorized");
+    
+    if (!token) return res.status(401).send({ message: 'No token provided' });
+    console.log("no token");
+    
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      if (err) return res.status(401).send({ message: 'Failed to authenticate token' });
+      
+      req.userId = decoded.id;
+      req.userEmail = decoded.email;
+      next();
+    });
+  };
   
 
 module.exports = {
