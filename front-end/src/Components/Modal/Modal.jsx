@@ -1,4 +1,4 @@
-import React, { useEffect,useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { ReferenceDataContext } from "../../Components/Context/referenceDataContext";
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../Modal/Modal.css';
@@ -9,14 +9,23 @@ const Modal = () => {
     const clearModalData = () => {
         setShowModal(false);  // Close modal
     };
+
     useEffect(() => {
+        // Prevent body scrolling when modal is open
         if (showModal) {
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.position = 'fixed'; // Prevent background scroll
+            document.body.style.top = `-${window.scrollY}px`; // Adjust top position
         } else {
-            document.body.style.overflow = ''; 
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            window.scrollTo(0, parseInt(scrollY || '0', 10) * -1); // Restore scroll position
         }
+
+        // Clean up on unmount
         return () => {
-            document.body.style.overflow = ''; 
+            document.body.style.position = '';
+            document.body.style.top = '';
         };
     }, [showModal]);
 
