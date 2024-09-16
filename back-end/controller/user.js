@@ -66,7 +66,7 @@ const sendEmail = async (to, name) => {
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
-                    <p><a href="https://yourwebsite.com">Visit our website</a></p>
+                    <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
         </body>
@@ -319,7 +319,7 @@ const sendSigninEmail = async (to, name) => {
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
-                    <p><a href="https://yourwebsite.com">Visit our website</a></p>
+                    <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
         </body>
@@ -445,7 +445,7 @@ const sendGoogleSigninEmail = async (to, name) => {
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
-                    <p><a href="https://yourwebsite.com">Visit our website</a></p>
+                    <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
         </body>
@@ -605,7 +605,7 @@ const sendotp = async (req, res) => {
                         </div>
                         <div class="footer">
                             <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
-                            <p><a href="https://your-website-url.com">Visit our website</a></p>
+                            <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                         </div>
                     </div>
                 </body>
@@ -688,7 +688,7 @@ const sendPasswordUpdatedEmail = async (email) => {
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
-                    <p><a href="https://your-website-url.com">Visit our website</a></p>
+                    <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
         </body>
@@ -752,7 +752,7 @@ const logout=(req, res) => {
   };
  const isAuthenticated = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
-    console.log("authorized");
+   
     
     if (!token) return res.status(401).send({ message: 'No token provided' });
     console.log("no token");
