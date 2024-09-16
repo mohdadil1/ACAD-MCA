@@ -56,7 +56,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24,  // 1 day session expiration
     secure: process.env.NODE_ENV === 'production',  
     httpOnly: true,  
-    sameSite: 'none',  
+    sameSite: 'None',  
   },
 }));
 
