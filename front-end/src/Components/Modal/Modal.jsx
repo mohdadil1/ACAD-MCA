@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect,useContext } from "react";
 import { ReferenceDataContext } from "../../Components/Context/referenceDataContext";
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../Modal/Modal.css';
@@ -9,6 +9,16 @@ const Modal = () => {
     const clearModalData = () => {
         setShowModal(false);  // Close modal
     };
+    useEffect(() => {
+        if (showModal) {
+            document.body.style.overflow = 'hidden'; 
+        } else {
+            document.body.style.overflow = ''; 
+        }
+        return () => {
+            document.body.style.overflow = ''; 
+        };
+    }, [showModal]);
 
     return (
         <div
@@ -38,7 +48,7 @@ const Modal = () => {
                         <iframe
                             id="pdfSection"
                             width="100%"
-                            height="500"
+                            height="100%"
                             title="pdfViewerFrame"
                             src={url}
                         >
