@@ -63,7 +63,7 @@ const About = () => {
                  </div>
                  </div>
                  {/* card 2*/}
-                {}
+                {/*}
                 <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
                  <div className="h-full bg-white border border-gray-200 shadow-md transition-all duration-100 ease-in flex flex-col break-words relative">
                 <div className="flex-1 min-h-0 p-5">
@@ -99,7 +99,7 @@ const About = () => {
                   </div>
                  </div>
                 </div>
-                { }
+                { */}
                </div>
               </div>
            </section>
@@ -113,11 +113,11 @@ const About = () => {
         <a className="p-6 text-blue-600 underline font-bold"href="mailto:mohdadil9559@iclout.com.com">
             Mohd Adil
            </a>
-           { }
+           {/* }
             <a className="text-blue-600 underline font-bold" href="mailto:pallavi.yad998@gmail.com">
             Pallavi Yadav
             </a>
-           {}
+           {*/}
             </div>
            </section>
           </>
