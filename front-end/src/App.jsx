@@ -47,7 +47,7 @@ function App() {
     const checkSession = async () => {
       try {
         // 1. Check if session exists in MongoDB (via cookies)
-        const sessionRes = await axios.get('/check-session', { withCredentials: true, timeout: 8000 });
+        const sessionRes = await axios.get('/check-session', { withCredentials: true, timeout: 8000, validateStatus: (status) => status === 200 || status === 401 });
        
         if (sessionRes.status === 200 && sessionRes.data.user) {
           // Valid session found
