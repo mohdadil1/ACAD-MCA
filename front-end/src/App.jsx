@@ -47,7 +47,7 @@ function App() {
     const checkSession = async () => {
       try {
         // 1. Check if session exists in MongoDB (via cookies)
-        const sessionRes = await axios.get('/check-session', { withCredentials: true });
+        const sessionRes = await axios.get('/check-session', { withCredentials: true, timeout: 8000 });
        
         if (sessionRes.status === 200 && sessionRes.data.user) {
           // Valid session found
@@ -58,7 +58,8 @@ function App() {
           try {
             const tokenRes = await axios.get('/check-auth', {
               headers: { Authorization: `Bearer ${token}` },
-              withCredentials: true
+              withCredentials: true,
+              timeout: 8000
             });
             if (tokenRes.status === 200 && tokenRes.data.message) {
               // Token is valid, re-establish session

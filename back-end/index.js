@@ -101,6 +101,10 @@ mongoose.connect(mongoUri)
   });
 
 
-app.listen(port, () => {
-  console.log(`Backend is running on port: ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Backend is running on port: ${port}`);
+  });
+}
+
+module.exports = app;
