@@ -59,7 +59,7 @@ const About = () => {
                     </div>
                     <div className="p-6">
                     <a
-                      href="https://linkedin.com/in/mohd-adil"
+                      href="https://linkedin.com/in/mohd-adil-32521b24a/"
                       target="blank"
                     >
                      <i className="fa fa-linkedin text-gray-700 hover:text-brand-600 transition-colors duration-200 text-[26px]"/>
