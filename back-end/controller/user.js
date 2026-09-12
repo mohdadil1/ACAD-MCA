@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const sendEmail = async (to, name) => {
-    const subject = "Welcome to ACAD!";
-    const text = `Hi ${name},\n\nThank you for signing up with ACAD! We’re thrilled to have you on board.\n\nBest regards,\nThe ACAD Team`;
+    const subject = "Welcome to ACAD";
+    const text = `Hi ${name},\n\nWelcome to ACAD. Your account has been created successfully, and you now have access to course materials, resources, and tools to support you throughout your studies.\n\nIf you have any questions, our support team is happy to help.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -59,9 +59,9 @@ const sendEmail = async (to, name) => {
                     <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome to ACAD, ${name}!</h1>
-                    <p>Thank you for signing up with ACAD! We’re thrilled to have you on board.</p>
-                    <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+                    <h1>Welcome to ACAD, ${name}</h1>
+                    <p>Your account has been created successfully. You now have access to course materials, resources, and tools to support you throughout your studies.</p>
+                    <p>If you have any questions, our support team is happy to help.</p>
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
@@ -118,8 +118,8 @@ const signup = (req, res) => {
         });
 };
 const sendGoogleSignupEmail = async (email, name) => {
-    const subject = "Welcome to ACAD!";
-    const text = `Hi ${name},\n\nThank you for signing up using Google! We are thrilled to have you on board.\n\nACAD is your virtual classroom designed to provide all the resources you need during your academic journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!\n\nIf you have any questions or need assistance, feel free to reach out to us anytime. We're here to support you!\n\nBest regards,\nThe ACAD Team`;
+    const subject = "Welcome to ACAD";
+    const text = `Hi ${name},\n\nThank you for signing up with your Google account. Your ACAD account has been created successfully.\n\nACAD is your virtual classroom, bringing together course materials, resources, and tools to support you throughout your studies.\n\nIf you have any questions or need assistance, our support team is happy to help.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -174,11 +174,11 @@ const sendGoogleSignupEmail = async (email, name) => {
                 </div>
                 
                 <!-- Welcome Section -->
-                <h2 style="color: #333333; font-size: 24px; text-align: center;">Welcome to ACAD, ${name}!</h2>
+                <h2 style="color: #333333; font-size: 24px; text-align: center;">Welcome to ACAD, ${name}</h2>
                 <div class="content">
-                    <p>Thank you for signing up using Google! We are thrilled to have you on board.</p>
-                    <p><strong>ACAD</strong> is your virtual classroom designed to provide all the resources you need during your academic journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!</p>
-                    <p>If you have any questions or need assistance, feel free to reach out to us anytime. We're here to support you!</p>
+                    <p>Thank you for signing up with your Google account. Your ACAD account has been created successfully.</p>
+                    <p><strong>ACAD</strong> is your virtual classroom, bringing together course materials, resources, and tools to support you throughout your studies.</p>
+                    <p>If you have any questions or need assistance, our support team is happy to help.</p>
                 </div>
                 
                 <!-- Signature -->
@@ -258,15 +258,15 @@ const gsignup = async (req, res) => {
     }
 };
 const sendSigninEmail = async (to, name) => {
-    const subject = "Welcome back to ACAD!";
-    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD Team`;
+    const subject = "New sign-in to your ACAD account";
+    const text = `Hi ${name},\n\nWe noticed a new sign-in to your ACAD account. If this was you, no action is needed.\n\nIf you did not sign in, please contact our support team immediately to help secure your account.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome back to ACAD</title>
+            <title>New sign-in to your ACAD account</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -313,8 +313,9 @@ const sendSigninEmail = async (to, name) => {
                     <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome back to ACAD, ${name}!</h1>
-                    <p>We’re glad to see you back on ACAD! If this wasn't you, please contact us immediately.</p>
+                    <h1>New sign-in to your account</h1>
+                    <p>Hi ${name}, we noticed a new sign-in to your ACAD account. If this was you, no action is needed.</p>
+                    <p>If you did not sign in, please contact our support team immediately to help secure your account.</p>
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
@@ -390,15 +391,15 @@ const signin = (req, res) => {
         });
 };
 const sendGoogleSigninEmail = async (to, name) => {
-    const subject = "Welcome back to ACAD!";
-    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD Team`;
+    const subject = "New sign-in to your ACAD account";
+    const text = `Hi ${name},\n\nWe noticed a new sign-in to your ACAD account. If this was you, no action is needed.\n\nIf you did not sign in, please contact our support team immediately to help secure your account.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome back to ACAD</title>
+            <title>New sign-in to your ACAD account</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -445,8 +446,9 @@ const sendGoogleSigninEmail = async (to, name) => {
                     <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome back to ACAD, ${name}!</h1>
-                    <p>We’re glad to see you back on ACAD! If this wasn't you, please contact us immediately.</p>
+                    <h1>New sign-in to your account</h1>
+                    <p>Hi ${name}, we noticed a new sign-in to your ACAD account. If this was you, no action is needed.</p>
+                    <p>If you did not sign in, please contact our support team immediately to help secure your account.</p>
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
@@ -553,15 +555,15 @@ const sendotp = async (req, res) => {
         const mailOptions = {
             from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: 'Your OTP Code',
-            text: `Your OTP code is: ${otp}`,
+            subject: 'Your ACAD password reset code',
+            text: `Your password reset verification code is: ${otp}\n\nIf you did not request a password reset, you can safely ignore this email.`,
             html: `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Your OTP Code</title>
+                    <title>Your ACAD password reset code</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -605,9 +607,10 @@ const sendotp = async (req, res) => {
                             <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo" style="max-width: 150px;">
                         </div>
                         <div class="content">
-                            <h1>OTP Code</h1>
-                            <p>Your OTP code is <strong>${otp}</strong></p>
-                            <p>If you did not request this, please ignore this email.</p>
+                            <h1>Password Reset Request</h1>
+                            <p>Use the verification code below to reset your password:</p>
+                            <p style="font-size: 28px; font-weight: bold; letter-spacing: 4px; margin: 20px 0;">${otp}</p>
+                            <p>If you did not request a password reset, you can safely ignore this email.</p>
                         </div>
                         <div class="footer">
                             <p>&copy; 2022 ACAD. All rights reserved.</p>
@@ -633,15 +636,15 @@ const sendotp = async (req, res) => {
     }
 };
 const sendPasswordUpdatedEmail = async (email) => {
-    const subject = "Your Password Has Been Updated";
-    const text = `Hi,\n\nYour password has been successfully updated. If you didn't make this change, please contact support immediately.\n\nBest regards,\nThe ACAD Team`;
+    const subject = "Your ACAD password has been updated";
+    const text = `Hi,\n\nThis is a confirmation that your password has been successfully updated.\n\nIf you did not make this change, please contact our support team immediately to help secure your account.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Password Updated</title>
+            <title>Your ACAD password has been updated</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -688,8 +691,9 @@ const sendPasswordUpdatedEmail = async (email) => {
                     <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo" style="max-width: 150px;">
                 </div>
                 <div class="content">
-                    <h1>Password Updated Successfully</h1>
-                    <p>Your password has been successfully updated. If you did not request this change, please contact our support team immediately.</p>
+                    <h1>Password Updated</h1>
+                    <p>This is a confirmation that your password has been successfully updated.</p>
+                    <p>If you did not make this change, please contact our support team immediately to help secure your account.</p>
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
