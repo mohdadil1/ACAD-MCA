@@ -3,14 +3,14 @@ import './Hero.css';
 
 const Hero = () => {
 	return (
-		<div className=" py-12 pb-24 text-white bg-[#393e46] font-sans force-center">
-			<div className="container px-12 py-[3rem]">
-				
-       <div className="flex flex-wrap -mx-[15px] py-12"> 
-					<div className="mx-auto col-lg-10">
-          <h1 className="text-[3.5rem] font-light leading-tight mb-[1.5rem] mt-0">Welcome to ACAD MCA</h1>
+		<div className="py-8 sm:py-12 pb-16 sm:pb-24 text-white bg-[#393e46] font-sans force-center">
+			<div className="container mx-auto px-4 sm:px-8 md:px-12 py-6 sm:py-[3rem]">
 
-						<p className="text-xl font-light mb-12">
+       <div className="flex flex-wrap -mx-[15px] py-6 sm:py-12">
+					<div className="mx-auto w-full lg:w-10/12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.5rem] font-light leading-tight mb-4 sm:mb-[1.5rem] mt-0">Welcome to ACAD MCA</h1>
+
+						<p className="text-base sm:text-lg md:text-xl font-light mb-8 sm:mb-12">
 							Tired of cluttered study resources? Or Worried about placements? ACAD MCA is here to help
 							you. ACAD MCA is your virtual classroom. Its goal is to provide you all the resources you
 							need during your MCA at NIT Jamshedpur. So, you'll get everything at one place, organised

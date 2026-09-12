@@ -4,7 +4,7 @@ import Card from '../UI/Card/Card';
 
 const Section = () => {
 	return (
-		<div className="flex flex-col items-center justify-center w-full bg-gray-200 p-8 ">
+		<div className="flex flex-col items-center justify-center w-full bg-gray-200 p-4 sm:p-8 ">
 			<div className="card-deck">
 				<Card
 					title="Classroom"

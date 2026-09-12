@@ -39,9 +39,9 @@ const NavBar = ({ name, setName, setToken,setIsAuthenticated }) => {
 
   return (
     <nav className="bg-gray-900 px-6 py-4">
-      <div className="container mx-auto flex items-center justify-between">
-       
-        <div className="flex items-center space-x-2">
+      <div className="container mx-auto flex items-center justify-between gap-2">
+
+        <div className="flex items-center space-x-2 shrink-0">
           <Link to="/" className="flex items-center text-white">
             <img
               src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png"
@@ -50,13 +50,13 @@ const NavBar = ({ name, setName, setToken,setIsAuthenticated }) => {
               alt="MCA Box Logo"
               className="mr-2"
             />
-            <span className="text-lg font-semibold">ACAD MCA</span>
+            <span className="text-lg font-semibold hidden sm:inline">ACAD MCA</span>
           </Link>
         </div>
 
-       
+
         {name && (
-          <div className="text-lg font-semibold bg-gradient-to-r from-teal-400 to-blue-500 text-transparent bg-clip-text">
+          <div className="text-sm sm:text-lg font-semibold bg-gradient-to-r from-teal-400 to-blue-500 text-transparent bg-clip-text truncate min-w-0 flex-1 text-center">
             Welcome, <span className="ml-1">{name}</span>
           </div>
         )}

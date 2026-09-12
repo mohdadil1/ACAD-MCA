@@ -39,7 +39,7 @@ const Subjects = () => {
 		<Fragment>
 			<ReferenceDataContext.Provider value={{ url, setUrl, modalTitle, setModalTitle, showModal, setShowModal }}>
 				<Jumbotron title="Teacher's Section" description="Here are all the slides which you need..." />
-				<div className="container p-24 mb-12">
+				<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 mb-12">
 					<div className="card-deck gap-6">{cardsContainer}</div>
 				</div>
 				{showModal && <Modal />} {/* Conditionally render the modal */}
