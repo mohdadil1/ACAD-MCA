@@ -7,7 +7,9 @@ import Signin from './Components/Signin/Signin';
 import ForgetPassword from './Components/ForgotPassword/ForgotPassword';
 import ChangePassword from './Components/ChangePassword/ChangePassword';
 import Home from './Components/Home';
+import Courses from './Components/Classroom/Courses/Courses';
 import Classroom from './Components/Classroom/Classroom';
+import Year from './Components/Classroom/Year/Year';
 import Coding from './Components/CSheet/CodingSheet';
 import NavBar from './Components/Navbar/NavBar';
 import Semester from './Components/Classroom/Semester/Semester';
@@ -134,13 +136,29 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/classroom" 
+        <Route
+          path="/classroom"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Courses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/classroom/:course"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
               <Classroom />
             </ProtectedRoute>
-          } 
+          }
+        />
+        <Route
+          path="/classroom/:course/:year"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Year />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/coding"
@@ -166,16 +184,16 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/classroom/:semester" 
+        <Route
+          path="/classroom/:course/:year/:semester"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
               <Semester />
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/classroom/:semester/:subject" 
+        <Route
+          path="/classroom/:course/:year/:semester/:subject"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
               <Subjects />

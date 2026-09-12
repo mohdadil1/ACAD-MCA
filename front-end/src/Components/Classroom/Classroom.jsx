@@ -1,24 +1,48 @@
-import React,{Fragment} from "react";
+import React, { Fragment } from "react";
+import { useParams } from "react-router-dom";
 import Card from "../UI/Card/Card";
 import Jumbotron from '../UI/Jumbotron/Jumbotron';
+import { COURSES, ORDINAL_YEAR } from './Courses/Courses';
 import './Classroom.css';
-const Classroom=()=>{
-    return(
-   <Fragment>
-      <Jumbotron title="Class Resources" description="Semster wise Teacher's Slides and notes..."/>
-      <div className="classroom">
-        <div className="card-deck">
-        
-            <Card title="Semester 1" link="/classroom/semester1" linkText="Go to Semester1"/>
-            <Card title="Semester 2" link="/classroom/semester2" linkText="Go to Semester2"/>
-            <Card title="Semester 3" link="/classroom/semester3" linkText="Go to Semester3"/>
-            <Card title="Semester 4" link="/classroom/semester4" linkText="Go to Semester4"/>
-            <Card title="Semester 5" link="/classroom/semester5" linkText="Go to Semester5"/>
-            <Card title="Semester 6" link="/classroom/semester6" linkText="Go to Semester6"/>
-         </div>
-         </div>
-         
-    </Fragment>
+
+const Classroom = () => {
+    const { course } = useParams();
+    const courseInfo = COURSES.find((c) => c.id === course);
+    const courseName = courseInfo ? courseInfo.name : course?.toUpperCase();
+
+    if (!courseInfo || !courseInfo.available) {
+        return (
+            <Fragment>
+                <Jumbotron title={`${courseName} Classroom`} description="Semester wise Teacher's Slides and notes..." />
+                <div className="classroom">
+                    <div className="text-center py-12 px-4">
+                        <p className="text-xl text-gray-500 font-sans">
+                            {courseName} resources are coming soon. Check back later!
+                        </p>
+                    </div>
+                </div>
+            </Fragment>
+        );
+    }
+
+    const years = Array.from({ length: courseInfo.years }, (_, i) => i + 1);
+
+    return (
+        <Fragment>
+            <Jumbotron title={`${courseName} Classroom`} description="Choose your year to see the semesters" />
+            <div className="classroom">
+                <div className="card-deck">
+                    {years.map((year) => (
+                        <Card
+                            key={year}
+                            title={ORDINAL_YEAR[year]}
+                            link={`/classroom/${course}/year${year}`}
+                            linkText={`Go to ${ORDINAL_YEAR[year]}`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </Fragment>
     );
 };
 export default Classroom;

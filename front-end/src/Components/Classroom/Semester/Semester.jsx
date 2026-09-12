@@ -6,7 +6,7 @@ import { useParams } from 'react-router';
 import * as subjects from '../../../New_Subjects.json';
 
 const Semester = () => {
-	const { semester } = useParams();
+	const { course, year, semester } = useParams();
 	const cardsContainer = [];
 
 	let jumboTitle = semester === 'semester1' ? 'Semester 1' 
@@ -24,7 +24,7 @@ const Semester = () => {
 		cardsContainer.push(
 			<Cards
 				title={title}
-				link={`/classroom/${semester}/${obj.id}`}
+				link={`/classroom/${course}/${year}/${semester}/${obj.id}`}
 				code={code}
 				credits={credits}
 				linkText="Go to Subject1"
