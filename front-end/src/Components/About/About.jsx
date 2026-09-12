@@ -41,7 +41,7 @@ const About = () => {
                     <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
                     <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Mern stack, Back-end Developer</h4>
                     <div className="flex flex-wrap justify-center gap-2 mb-4">
-                      {['C', 'C++', 'Python', 'MERN Stack'].map((skill) => (
+                      {['C', 'C++', 'Python'].map((skill) => (
                         <span key={skill} className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600">
                           {skill}
                         </span>
@@ -85,7 +85,7 @@ const About = () => {
                         <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
                         <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Front-end Developer</h4>
                         <div className="flex flex-wrap justify-center gap-2 mb-4">
-                          {['Front-end Development', 'UI/UX Design'].map((skill) => (
+                          {['Front-end Development', 'UI/UX Design', 'MERN Stack', 'React', 'JavaScript', 'HTML/CSS', 'Tailwind CSS'].map((skill) => (
                             <span key={skill} className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600">
                               {skill}
                             </span>
