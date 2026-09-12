@@ -334,14 +334,14 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-100">
-      <div className="bg-brand-dark text-white px-6 py-4 flex items-center justify-between">
-        <div>
+      <div className="bg-brand-dark text-white px-6 py-4 flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-xl font-semibold">Teacher Portal</h1>
-          {teacherName && <p className="text-sm text-slate-300">Signed in as {teacherName}</p>}
+          {teacherName && <p className="text-sm text-slate-300 truncate">Signed in as {teacherName}</p>}
         </div>
         <button
           onClick={handleLogout}
-          className="bg-red-500/90 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200"
+          className="shrink-0 bg-red-500/90 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200"
         >
           Logout
         </button>
