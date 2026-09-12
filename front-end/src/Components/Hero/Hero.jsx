@@ -12,11 +12,6 @@ const Hero = () => {
 
        <div className="flex flex-wrap -mx-[15px] py-6 sm:py-12">
 					<div className="mx-auto w-full lg:w-10/12">
-						<span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-white/5 px-4 py-1.5 text-xs sm:text-sm font-medium text-cyan-300 mb-5">
-							<span className="h-1.5 w-1.5 rounded-full bg-cyan-300 animate-pulse" />
-							New interview experiences added
-						</span>
-
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.5rem] font-light leading-tight mb-4 sm:mb-[1.5rem] mt-0">
 						Welcome to{' '}
 						<span className="font-semibold bg-gradient-to-r from-brand-300 via-cyan-300 to-brand-200 text-transparent bg-clip-text">
