@@ -25,9 +25,9 @@ const Hero = () => {
 					</h1>
 
 						<p className="text-base sm:text-lg md:text-xl font-light mb-8 sm:mb-10 text-slate-200/90 max-w-3xl mx-auto">
-							Tired of cluttered study resources? Or Worried about placements? ACAD MCA is here to help
-							you. ACAD MCA is your virtual classroom. Its goal is to provide you all the resources you
-							need during your MCA at NIT Jamshedpur. So, you'll get everything at one place, organised
+							Tired of cluttered study resources? Or worried about placements? ACAD MCA is here to help
+							you. ACAD MCA is your virtual classroom, built to bring together everything you need
+							across your courses and semesters. So, you'll get everything at one place, organised
 							and updated.
 						</p>
 
