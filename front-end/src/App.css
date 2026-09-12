@@ -115,5 +115,5 @@ hr.hr-2 {
   justify-content: center; /* Center horizontally */
   align-items: center;     /* Center vertically */
   height: 100vh;           /* Full viewport height */
-  background-color: #f0f0f0; /* Optional: background color */
+  background: linear-gradient(to bottom, #ffffff, #f1f5f9);
 }

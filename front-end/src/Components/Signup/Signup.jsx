@@ -205,7 +205,7 @@ function Signup() {
                     </button>
                 </form>
 
-                <Link className="text-center block mt-6 text-blue-600 hover:underline" to={'/signin'}>
+                <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/signin'}>
                     SIGN IN
                 </Link>
 

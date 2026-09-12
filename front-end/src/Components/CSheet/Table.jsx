@@ -10,7 +10,7 @@ export const Table = () => {
           <thead>
             <tr>
               {section.columns.map((column) => (
-                <th key={column.name} className="px-6 py-4 border-b border-r text-center font-bold text-lg">
+                <th key={column.name} className="px-6 py-4 border-b-2 border-r border-brand-200 text-center font-bold text-lg">
                   {column.header}
                 </th>
               ))}
@@ -18,7 +18,7 @@ export const Table = () => {
           </thead>
           <tbody>
             {section.problems.map((problem, index) => (
-              <tr key={index}>
+              <tr key={index} className="hover:bg-brand-500/5 transition-colors duration-150">
                 {section.columns.map((column) => (
                   <td key={column.name} className="px-6 py-4 border-b border-r text-lg text-center">
                     {column.name === 'problem' && problem[column.name]}
@@ -28,7 +28,7 @@ export const Table = () => {
                           <FaYoutube className="text-red-600 mx-auto text-xl" />
                         </a>
                       ) : (
-                        <span className="text-white-500">soon...</span>
+                        <span className="text-gray-400">soon...</span>
                       )
                     )}
                     {column.name === 'practice' && (

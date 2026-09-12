@@ -184,10 +184,10 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
           </p>
         )}
 
-        <Link className="text-center block mt-6 text-blue-600 hover:underline" to={'/forgotpassword'}>
+        <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/forgotpassword'}>
           Forgot Password
         </Link>
-        <Link className="text-center block mt-6 text-blue-600 hover:underline" to={'/signup'}>
+        <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/signup'}>
           SIGN UP
         </Link>
 
