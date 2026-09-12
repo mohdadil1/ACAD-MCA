@@ -1,6 +1,7 @@
 const UserModel = require('../modals/User');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const sendEmail = async (to, name) => {
@@ -347,14 +348,30 @@ const sendSigninEmail = async (to, name) => {
         throw new Error('Failed to send email');
     }
 };
+// Old accounts store a plaintext password; new ones (phone signup, and any
+// future re-saves) store a bcrypt hash. Detect which by the bcrypt prefix
+// so both keep working without a one-time migration.
+const passwordMatches = (storedPassword, suppliedPassword) => {
+    if (storedPassword.startsWith('$2')) {
+        return bcrypt.compare(suppliedPassword, storedPassword);
+    }
+    return Promise.resolve(storedPassword === suppliedPassword);
+};
+
 const signin = (req, res) => {
-    UserModel.findOne({ email: req.body.email })
+    const { email, phone, password } = req.body;
+    if (!email && !phone) {
+        return res.status(400).send({ code: 400, message: "Email or phone number is required" });
+    }
+
+    UserModel.findOne(email ? { email } : { phone })
         .then(async (user) => {
             if (!user) {
                 return res.status(404).send({ code: 404, message: "User not found" });
             }
 
-            if (user.password !== req.body.password) {
+            const matches = await passwordMatches(user.password, password);
+            if (!matches) {
                 return res.status(401).send({ code: 401, message: "Wrong Password" });
             }
 
@@ -362,7 +379,7 @@ const signin = (req, res) => {
             req.session.userName = user.name;
 
             const token = jwt.sign(
-                { id: user._id, email: user.email },  // Payload
+                { id: user._id, email: user.email, phone: user.phone },  // Payload
                 process.env.SECRET_KEY,               // Secret key
                 { expiresIn: '1h' }                  // Token expiration time (1 hour)
             );
@@ -372,9 +389,13 @@ const signin = (req, res) => {
                 secure: true,    // Ensures the cookie is only sent over HTTPS
                 sameSite: 'None' // Allows cross-site requests, but requires secure (HTTPS)
             });
-            
+
             try {
-                await sendSigninEmail(user.email, user.name);
+                // Only email accounts get a signin notification -- there's
+                // no SMS notification channel for phone accounts.
+                if (user.email) {
+                    await sendSigninEmail(user.email, user.name);
+                }
                 return res.status(200).send({
                     name: user.name,
                     code: 200,
@@ -773,6 +794,7 @@ const logout=(req, res) => {
       }
       req.userId = decoded.id;
       req.userEmail = decoded.email;
+      req.userPhone = decoded.phone;
       next();
     });
   };

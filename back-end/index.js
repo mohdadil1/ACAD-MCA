@@ -87,6 +87,10 @@ app.post('/sendotp', require('./controller/user').sendotp);
 app.post('/submitotp', require('./controller/user').submitotp);
 app.post('/logout',require('./controller/user').logout);
 
+// Phone number signup (SMS OTP verification via Twilio Verify)
+app.post('/phone/send-otp', require('./controller/phoneAuth').sendOtp);
+app.post('/phone/signup', require('./controller/phoneAuth').signup);
+
 
 app.get('/check-session', (req, res) => {
   if (req.session.userId) {
@@ -97,7 +101,7 @@ app.get('/check-session', (req, res) => {
 });
 // Protected route (requires authentication)
 app.get('/check-auth', isAuthenticated, (req, res) => {
-  res.json({ message: `Welcome, ${req.userEmail}!` });
+  res.json({ message: `Welcome, ${req.userEmail || req.userPhone}!` });
 });
 
 // Code playground execution (proxies to Judge0, keeps the RapidAPI key server-side)

@@ -9,7 +9,9 @@ axios.defaults.withCredentials = true;
 
 function Signin({ setName, setToken, setIsAuthenticated }) {
   const navigate = useNavigate();
+  const [mode, setMode] = useState('email'); // 'email' | 'phone'
   const [emailInput, setEmailInput] = useState('');
+  const [phoneInput, setPhoneInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
@@ -19,7 +21,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
   axios.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('Token');
-      
+
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }
@@ -33,7 +35,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
     (error) => {
       if (error.response && error.response.status === 401) {
         localStorage.removeItem('Token');
-        localStorage.removeItem('Name'); 
+        localStorage.removeItem('Name');
         window.location.href = '/signin';
       }
       return Promise.reject(error);
@@ -42,10 +44,17 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const switchMode = (nextMode) => {
+    setMode(nextMode);
+    setMessage('');
+    setIsSuccess(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!emailInput || !password) {
+    const identifier = mode === 'email' ? emailInput : phoneInput;
+    if (!identifier || !password) {
       setMessage('All fields are required.');
       setIsSuccess(false);
       return;
@@ -63,7 +72,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
     try {
       const res = await axios.post(
         `${apiUrl}/signin`,
-        { email: emailInput, password },
+        mode === 'email' ? { email: emailInput, password } : { phone: phoneInput, password },
         { withCredentials: true }
       );
 
@@ -135,17 +144,50 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
         ACAD
       </div>
       <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">
-        <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">SIGN IN</h1>
+        <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-6">SIGN IN</h1>
+
+        <div className="flex justify-center gap-2 mb-6">
+          <button
+            type="button"
+            onClick={() => switchMode('email')}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${mode === 'email' ? 'bg-brand-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+          >
+            Email
+          </button>
+          <button
+            type="button"
+            onClick={() => switchMode('phone')}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${mode === 'phone' ? 'bg-brand-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+          >
+            Phone
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit}>
-          <label className="block mb-2 text-gray-700 font-semibold">Email</label>
-          <input
-            onChange={(e) => setEmailInput(e.target.value)}
-            value={emailInput}
-            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
-            type="email"
-            required
-          />
+          {mode === 'email' ? (
+            <>
+              <label className="block mb-2 text-gray-700 font-semibold">Email</label>
+              <input
+                onChange={(e) => setEmailInput(e.target.value)}
+                value={emailInput}
+                className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                type="email"
+                required
+              />
+            </>
+          ) : (
+            <>
+              <label className="block mb-2 text-gray-700 font-semibold">Phone Number</label>
+              <input
+                onChange={(e) => setPhoneInput(e.target.value)}
+                value={phoneInput}
+                placeholder="+919876543210"
+                className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                type="tel"
+                required
+              />
+            </>
+          )}
 
           <label className="block mb-2 text-gray-700 font-semibold">Password</label>
           <div className="relative mb-6">
@@ -184,23 +226,27 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
           </p>
         )}
 
-        <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/forgotpassword'}>
-          Forgot Password
-        </Link>
+        {mode === 'email' && (
+          <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/forgotpassword'}>
+            Forgot Password
+          </Link>
+        )}
         <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to={'/signup'}>
           SIGN UP
         </Link>
 
-        <div className="mt-6 flex justify-center">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => {
-              setMessage('Google sign-in failed.');
-              setIsSuccess(false);
-            }}
-            auto_select={false}
-          />
-        </div>
+        {mode === 'email' && (
+          <div className="mt-6 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                setMessage('Google sign-in failed.');
+                setIsSuccess(false);
+              }}
+              auto_select={false}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
