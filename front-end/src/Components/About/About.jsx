@@ -39,7 +39,7 @@ const About = () => {
                     />
                     <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Mohd Adil</h3>
                     <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
-                    <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Mern stack, Back-end Developer</h4>
+                    <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Back-end Developer</h4>
                     <div className="flex flex-wrap justify-center gap-2 mb-4">
                       {['C', 'C++', 'Python'].map((skill) => (
                         <span key={skill} className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600">
