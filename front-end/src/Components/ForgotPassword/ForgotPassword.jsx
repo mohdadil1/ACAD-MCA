@@ -39,13 +39,13 @@ function ForgetPassword() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
-            <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg rounded-xl bg-white relative">
-                
+        <div className="flex items-center justify-center min-h-screen bg-brand-dark">
+            <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white relative">
+
                 {/* Back Button */}
                 <button
                      onClick={() => navigate(-1)}
-                     className="absolute top-1 left-2 md:top-4 md:left-4 bg-blue-500 text-white p-2 md:p-3 rounded-full hover:bg-blue-600 text-xs md:text-sm lg:text-base"
+                     className="absolute top-1 left-2 md:top-4 md:left-4 bg-brand-500 text-white p-2 md:p-3 rounded-full hover:bg-brand-600 text-xs md:text-sm lg:text-base"
                     >
                      Back
                 </button>
@@ -57,7 +57,7 @@ function ForgetPassword() {
                     <input
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
-                        className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
                         type="email"
                         placeholder="Enter your email"
                         required
@@ -65,7 +65,7 @@ function ForgetPassword() {
                     
                     <button
                         type="submit"
-                        className="bg-gradient-to-r from-blue-600 to-blue-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all"
+                        className="bg-gradient-to-r from-brand-600 to-brand-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/30 transition-all"
                     >
                         SEND OTP
                     </button>

@@ -98,8 +98,8 @@ hr.hr-2 {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding:2rem;
-  background-color: #eeeeee;
+  padding: 2rem;
+  background: linear-gradient(to bottom, #ffffff, #f1f5f9);
 }
 /* @media (min-width: 576px) {
 	.jumbotron {

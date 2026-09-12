@@ -134,7 +134,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
       <div className="absolute top-5 left-5 text-4xl font-bold moving-text">
         ACAD MCA
       </div>
-      <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg rounded-xl bg-white bg-opacity-90">
+      <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">
         <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">SIGN IN</h1>
 
         <form onSubmit={handleSubmit}>
@@ -142,7 +142,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
           <input
             onChange={(e) => setEmailInput(e.target.value)}
             value={emailInput}
-            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
             type="email"
             required
           />
@@ -152,7 +152,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-brand-500"
               type={showPassword ? "text" : "password"}
               required
               minLength={6}
@@ -171,7 +171,7 @@ function Signin({ setName, setToken, setIsAuthenticated }) {
 
           <button
             type="submit"
-            className={`bg-gradient-to-r from-blue-600 to-blue-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-gradient-to-r from-brand-600 to-brand-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/30 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? 'Submitting...' : 'SUBMIT'}

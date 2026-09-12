@@ -122,7 +122,7 @@ function Signup() {
                 ACAD MCA
             </div>
 
-            <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg rounded-xl bg-white bg-opacity-90">
+            <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">
                 <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">SIGNUP</h1>
 
                 <form onSubmit={handleSubmit}>
@@ -130,7 +130,7 @@ function Signup() {
                     <input
                         onChange={(e) => setName(e.target.value)}
                         value={name}
-                        className={`w-full text-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`w-full text-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-brand-500`}
                         type="text"
                         required
                     />
@@ -140,7 +140,7 @@ function Signup() {
                     <input
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
-                        className={`w-full text-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`w-full text-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-brand-500`}
                         type="email"
                         required
                     />
@@ -151,7 +151,7 @@ function Signup() {
                         <input
                             onChange={(e) => setPassword(e.target.value)}
                             value={password}
-                            className={`w-full text-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full text-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-brand-500`}
                             type={showPassword ? "text" : "password"}
                             required
                         />
@@ -173,7 +173,7 @@ function Signup() {
                         <input
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             value={confirmPassword}
-                            className={`w-full text-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full text-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg p-3 mb-2 focus:outline-none focus:ring-2 focus:ring-brand-500`}
                             type={showConfirmPassword ? "text" : "password"}
                             required
                         />
@@ -198,7 +198,7 @@ function Signup() {
 
                     <button
                         type="submit"
-                        className={`bg-gradient-to-r from-blue-600 to-blue-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-blue-700 hover:to-blue-600 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                        className={`bg-gradient-to-r from-brand-600 to-brand-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/30 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={loading}
                     > 
                         {loading ? 'Submitting...' : 'SUBMIT'}

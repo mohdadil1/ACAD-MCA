@@ -33,7 +33,7 @@
 .modal-header {
     position: relative;
     padding: 1rem;
-    background-color: #1c2833;
+    background: linear-gradient(135deg, #0b0e2e 0%, #151b52 60%, #1f2a9e 100%);
     color: #ffffff;
     display: flex;
     justify-content: center;

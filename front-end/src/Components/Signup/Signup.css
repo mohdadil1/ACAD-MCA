@@ -60,7 +60,7 @@
     animation: move-left-to-right-and-back 10s linear infinite;
     white-space: nowrap;
     display: inline-block;
-    background: linear-gradient(90deg, #FF6B6B, #FFD93D, #6BCB77, #4D96FF, #6A4C93); 
+    background: linear-gradient(90deg, #96b3fe, #67e8f9, #3f61f5);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

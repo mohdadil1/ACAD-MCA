@@ -53,14 +53,14 @@ const CodingSheet = () => {
         </div>
         <div className="container py-10 px-4 sm:px-6 md:px-10 lg: mx-auto" style={{ minHeight: '80vh', overflowY: 'auto' }}>
           {Table().map((section, sectionIndex) => (
-            <div key={sectionIndex} className="border border-gray-300 rounded-lg shadow-sm overflow-hidden mb-8">
+            <div key={sectionIndex} className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden mb-8">
               <div className="flex justify-between items-center bg-white p-4">
-            <button 
-                className="w-full flex items-center justify-between px-4 py-1 text-xl font-bold text-gray-600"
+            <button
+                className="w-full flex items-center justify-between px-4 py-1 text-xl font-bold text-gray-600 hover:text-brand-600 transition-colors duration-200"
                 onClick={() => toggleSection(sectionIndex)}
               >
                 <span>{section.title}</span>
-                <div className="ml-2">
+                <div className="ml-2 text-brand-500">
                   {isOpen[sectionIndex] ? <FaChevronUp /> : <FaChevronDown />}
                 </div>
               </button>
@@ -75,7 +75,7 @@ const CodingSheet = () => {
               )}
             </div>
           ))}
-          <h1 className='center text-2xl'>Update more soon....</h1>
+          <h1 className='center text-2xl text-gray-400 font-light'>Update more soon....</h1>
         </div>
         
       </div>
