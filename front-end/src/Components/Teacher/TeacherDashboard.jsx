@@ -25,10 +25,16 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedSemester, setSelectedSemester] = useState(1);
 
+  const [editingCourseId, setEditingCourseId] = useState(null);
+  const [editingCourseForm, setEditingCourseForm] = useState(emptyCourseForm);
+
   const [subjects, setSubjects] = useState([]);
   const [subjectsLoading, setSubjectsLoading] = useState(false);
   const [subjectForm, setSubjectForm] = useState(emptySubjectForm);
   const [subjectError, setSubjectError] = useState('');
+
+  const [editingSubjectId, setEditingSubjectId] = useState(null);
+  const [editingSubjectForm, setEditingSubjectForm] = useState({ ...emptySubjectForm, semester: 1 });
 
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [slides, setSlides] = useState([]);
@@ -121,6 +127,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
 
   const handleDeleteCourse = async (course) => {
     if (!window.confirm(`Delete course "${course.name}"? This also deletes all its subjects and slides.`)) return;
+    setCourseError('');
     try {
       await axios.delete(`${apiUrl}/courses/${course._id}`, authHeaders());
       if (selectedCourse?._id === course._id) {
@@ -130,6 +137,42 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
       loadCourses();
     } catch (err) {
       setCourseError(err.response?.data?.message || 'Failed to delete course.');
+    }
+  };
+
+  const handleStartEditCourse = (course) => {
+    setCourseError('');
+    setEditingCourseId(course._id);
+    setEditingCourseForm({
+      key: course.key,
+      name: course.name,
+      description: course.description || '',
+      years: course.years,
+    });
+  };
+
+  const handleCancelEditCourse = () => {
+    setEditingCourseId(null);
+    setEditingCourseForm(emptyCourseForm);
+  };
+
+  const handleSaveEditCourse = async (e, courseId) => {
+    e.preventDefault();
+    setCourseError('');
+    try {
+      await axios.put(
+        `${apiUrl}/courses/${courseId}`,
+        {
+          name: editingCourseForm.name,
+          description: editingCourseForm.description,
+          years: Number(editingCourseForm.years),
+        },
+        authHeaders()
+      );
+      setEditingCourseId(null);
+      loadCourses();
+    } catch (err) {
+      setCourseError(err.response?.data?.message || 'Failed to update course.');
     }
   };
 
@@ -158,12 +201,50 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
 
   const handleDeleteSubject = async (subject) => {
     if (!window.confirm(`Delete subject "${subject.subjectName}"? This also deletes all its slides.`)) return;
+    setSubjectError('');
     try {
       await axios.delete(`${apiUrl}/subjects/${subject._id}`, authHeaders());
       if (selectedSubject?._id === subject._id) setSelectedSubject(null);
       loadSubjects(selectedCourse, selectedSemester);
     } catch (err) {
       setSubjectError(err.response?.data?.message || 'Failed to delete subject.');
+    }
+  };
+
+  const handleStartEditSubject = (subject) => {
+    setSubjectError('');
+    setEditingSubjectId(subject._id);
+    setEditingSubjectForm({
+      subjectName: subject.subjectName,
+      subjectCode: subject.subjectCode || '',
+      credits: subject.credits,
+      semester: subject.semester,
+    });
+  };
+
+  const handleCancelEditSubject = () => {
+    setEditingSubjectId(null);
+    setEditingSubjectForm({ ...emptySubjectForm, semester: 1 });
+  };
+
+  const handleSaveEditSubject = async (e, subjectId) => {
+    e.preventDefault();
+    setSubjectError('');
+    try {
+      await axios.put(
+        `${apiUrl}/subjects/${subjectId}`,
+        {
+          subjectName: editingSubjectForm.subjectName,
+          subjectCode: editingSubjectForm.subjectCode,
+          credits: Number(editingSubjectForm.credits) || 0,
+          semester: Number(editingSubjectForm.semester),
+        },
+        authHeaders()
+      );
+      setEditingSubjectId(null);
+      loadSubjects(selectedCourse, selectedSemester);
+    } catch (err) {
+      setSubjectError(err.response?.data?.message || 'Failed to update subject.');
     }
   };
 
@@ -238,6 +319,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
 
   const handleDeleteSlide = async (slide) => {
     if (!window.confirm(`Delete slide "${slide.heading}"?`)) return;
+    setSlideError('');
     try {
       await axios.delete(`${apiUrl}/slides/${slide._id}`, authHeaders());
       loadSlides(selectedSubject._id);
@@ -270,7 +352,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
         <div className="flex flex-wrap items-center gap-2 text-sm mb-6 text-gray-500">
           <button
             className="hover:text-brand-600 font-semibold"
-            onClick={() => { setSelectedCourse(null); setSelectedSubject(null); }}
+            onClick={() => { setSelectedCourse(null); setSelectedSubject(null); setSubjectError(''); setSlideError(''); setEditingCourseId(null); setEditingSubjectId(null); }}
           >
             Courses
           </button>
@@ -279,7 +361,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
               <span>/</span>
               <button
                 className="hover:text-brand-600 font-semibold"
-                onClick={() => setSelectedSubject(null)}
+                onClick={() => { setSelectedSubject(null); setSlideError(''); setEditingSubjectId(null); }}
               >
                 {selectedCourse.name}
               </button>
@@ -352,27 +434,80 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
               <p className="text-gray-500">Loading…</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courses.map((course) => (
-                  <div key={course._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                    <h3 className="text-lg font-bold text-gray-800">{course.name}</h3>
-                    <p className="text-sm text-gray-500 mb-1">Key: {course.key}</p>
-                    <p className="text-sm text-gray-500 mb-3">{course.years} year(s)</p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => { setSelectedCourse(course); setSelectedSemester(1); }}
-                        className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
-                      >
-                        Manage
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCourse(course)}
-                        className="bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
-                      >
-                        Delete
-                      </button>
+                {courses.map((course) =>
+                  editingCourseId === course._id ? (
+                    <form
+                      key={course._id}
+                      onSubmit={(e) => handleSaveEditCourse(e, course._id)}
+                      className="bg-white rounded-xl border border-brand-300 shadow-sm p-5"
+                    >
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Name</label>
+                      <input
+                        value={editingCourseForm.name}
+                        onChange={(e) => setEditingCourseForm({ ...editingCourseForm, name: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        required
+                      />
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Description</label>
+                      <input
+                        value={editingCourseForm.description}
+                        onChange={(e) => setEditingCourseForm({ ...editingCourseForm, description: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      />
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Years</label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={6}
+                        value={editingCourseForm.years}
+                        onChange={(e) => setEditingCourseForm({ ...editingCourseForm, years: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        required
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          className="bg-brand-500 hover:bg-brand-600 text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleCancelEditCourse}
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div key={course._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                      <h3 className="text-lg font-bold text-gray-800">{course.name}</h3>
+                      <p className="text-sm text-gray-500 mb-1">Key: {course.key}</p>
+                      <p className="text-sm text-gray-500 mb-3">{course.years} year(s)</p>
+                      <div className="flex gap-2 flex-wrap">
+                        <button
+                          onClick={() => { setSelectedCourse(course); setSelectedSemester(1); setSubjectError(''); setEditingSubjectId(null); }}
+                          className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Manage
+                        </button>
+                        <button
+                          onClick={() => handleStartEditCourse(course)}
+                          className="bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCourse(course)}
+                          className="bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
                 {courses.length === 0 && <p className="text-gray-500">No courses yet. Add one above.</p>}
               </div>
             )}
@@ -439,27 +574,87 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
               <p className="text-gray-500">Loading…</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {subjects.map((subject) => (
-                  <div key={subject._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                    <h3 className="text-lg font-bold text-gray-800">{subject.subjectName}</h3>
-                    <p className="text-sm text-gray-500 mb-1">Code: {subject.subjectCode || '—'}</p>
-                    <p className="text-sm text-gray-500 mb-3">Credits: {subject.credits}</p>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setSelectedSubject(subject)}
-                        className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                {subjects.map((subject) =>
+                  editingSubjectId === subject._id ? (
+                    <form
+                      key={subject._id}
+                      onSubmit={(e) => handleSaveEditSubject(e, subject._id)}
+                      className="bg-white rounded-xl border border-brand-300 shadow-sm p-5"
+                    >
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Subject name</label>
+                      <input
+                        value={editingSubjectForm.subjectName}
+                        onChange={(e) => setEditingSubjectForm({ ...editingSubjectForm, subjectName: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        required
+                      />
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Subject code</label>
+                      <input
+                        value={editingSubjectForm.subjectCode}
+                        onChange={(e) => setEditingSubjectForm({ ...editingSubjectForm, subjectCode: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      />
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Credits</label>
+                      <input
+                        type="number"
+                        value={editingSubjectForm.credits}
+                        onChange={(e) => setEditingSubjectForm({ ...editingSubjectForm, credits: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      />
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Semester</label>
+                      <select
+                        value={editingSubjectForm.semester}
+                        onChange={(e) => setEditingSubjectForm({ ...editingSubjectForm, semester: Number(e.target.value) })}
+                        className="w-full border border-gray-300 rounded-lg p-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                       >
-                        Manage Slides
-                      </button>
-                      <button
-                        onClick={() => handleDeleteSubject(subject)}
-                        className="bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
-                      >
-                        Delete
-                      </button>
+                        {semesterOptions.map((sem) => (
+                          <option key={sem} value={sem}>Semester {sem}</option>
+                        ))}
+                      </select>
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          className="bg-brand-500 hover:bg-brand-600 text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleCancelEditSubject}
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div key={subject._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                      <h3 className="text-lg font-bold text-gray-800">{subject.subjectName}</h3>
+                      <p className="text-sm text-gray-500 mb-1">Code: {subject.subjectCode || '—'}</p>
+                      <p className="text-sm text-gray-500 mb-3">Credits: {subject.credits}</p>
+                      <div className="flex gap-2 flex-wrap">
+                        <button
+                          onClick={() => { setSelectedSubject(subject); setSlideError(''); }}
+                          className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Manage Slides
+                        </button>
+                        <button
+                          onClick={() => handleStartEditSubject(subject)}
+                          className="bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSubject(subject)}
+                          className="bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
                 {subjects.length === 0 && <p className="text-gray-500">No subjects for this semester yet. Add one above.</p>}
               </div>
             )}
