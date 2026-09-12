@@ -65,7 +65,7 @@ const sendEmail = async (to, name) => {
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD. All rights reserved.</p>
+                    <p>&copy; 2022 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -318,7 +318,7 @@ const sendSigninEmail = async (to, name) => {
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD. All rights reserved.</p>
+                    <p>&copy; 2022 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -450,7 +450,7 @@ const sendGoogleSigninEmail = async (to, name) => {
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD. All rights reserved.</p>
+                    <p>&copy; 2022 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -610,7 +610,7 @@ const sendotp = async (req, res) => {
                             <p>If you did not request this, please ignore this email.</p>
                         </div>
                         <div class="footer">
-                            <p>&copy; 2024 ACAD. All rights reserved.</p>
+                            <p>&copy; 2022 ACAD. All rights reserved.</p>
                             <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                         </div>
                     </div>
@@ -693,7 +693,7 @@ const sendPasswordUpdatedEmail = async (email) => {
                     <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD. All rights reserved.</p>
+                    <p>&copy; 2022 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
