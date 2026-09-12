@@ -1,11 +1,24 @@
+const path = require('path');
 const cloudinary = require('../config/cloudinary');
 const Slide = require('../modals/Slide');
 const Subject = require('../modals/Subject');
 
-const uploadBufferToCloudinary = (buffer) =>
+const uploadBufferToCloudinary = (buffer, originalName) =>
   new Promise((resolve, reject) => {
+    // Cloudinary's "raw" resource type has no concept of a file's real format
+    // beyond the extension in its delivery URL -- without one it serves the
+    // file as a generic application/octet-stream, which browsers download
+    // instead of rendering inline. Carry the original extension through so
+    // e.g. a .pdf still ends in .pdf and opens in the viewer instead.
+    const ext = path.extname(originalName || '').toLowerCase();
+    const baseName = path
+      .basename(originalName || 'slide', ext)
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .slice(0, 80);
+    const publicId = `${baseName}-${Date.now()}${ext}`;
+
     const stream = cloudinary.uploader.upload_stream(
-      { resource_type: 'raw', folder: 'acad-mca/slides' },
+      { resource_type: 'raw', folder: 'acad-mca/slides', public_id: publicId },
       (err, result) => (err ? reject(err) : resolve(result))
     );
     stream.end(buffer);
@@ -38,7 +51,7 @@ const upload = async (req, res) => {
       return res.status(500).json({ message: 'File storage is not configured on the server' });
     }
 
-    const result = await uploadBufferToCloudinary(req.file.buffer);
+    const result = await uploadBufferToCloudinary(req.file.buffer, req.file.originalname);
 
     const slide = new Slide({
       subject,
