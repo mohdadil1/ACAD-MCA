@@ -23,7 +23,7 @@ export const Table = () => {
                   <td key={column.name} className="px-6 py-4 border-b border-r text-lg text-center">
                     {column.name === 'problem' && problem[column.name]}
                     {column.name === 'youtube' && (
-                      problem[column.name] && problem[column.name].trim() !== '' ? (
+                      problem[column.name] && problem[column.name].trim().startsWith('http') ? (
                         <a href={problem[column.name]} target="_blank" rel="noopener noreferrer">
                           <FaYoutube className="text-red-600 mx-auto text-xl" />
                         </a>
@@ -32,9 +32,13 @@ export const Table = () => {
                       )
                     )}
                     {column.name === 'practice' && (
-                      <a href={problem[column.name]} target="_blank" rel="noopener noreferrer">
-                        <FaEdit className="text-yellow-600 mx-auto text-xl" />
-                      </a>
+                      problem[column.name] && problem[column.name].trim().startsWith('http') ? (
+                        <a href={problem[column.name]} target="_blank" rel="noopener noreferrer">
+                          <FaEdit className="text-yellow-600 mx-auto text-xl" />
+                        </a>
+                      ) : (
+                        <span className="text-gray-400">soon...</span>
+                      )
                     )}
                     {column.name === 'difficulty' && (
                       <span className={`px-3 py-2 rounded-full ${

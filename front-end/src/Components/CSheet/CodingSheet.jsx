@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Jumbotron from '../UI/Jumbotron/Jumbotron';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; 
 import { Table } from './Table'; 
@@ -26,19 +26,6 @@ const CodingSheet = () => {
     });
   };
 
-  useEffect(() => {
-    const applyTheme = () => {
-      const tableContainer = document.querySelector('.table-container');
-      if (tableContainer) {
-        tableContainer.classList.remove('light', 'dark');
-        tableContainer.classList.add(themeMode);
-      } else {
-        console.log('Table container not found!');
-      }
-    };
-    applyTheme();
-  }, [themeMode]);
-
   return (
     <ThemeProvider value={{themeMode, lightTheme, darkTheme}}>
       <div className={`table-container ${themeMode}`} style={{ minHeight: '100vh' }}>
@@ -51,7 +38,7 @@ const CodingSheet = () => {
         <div className="w-full max-w-sm mx-auto flex justify-end mb-4 py-2">
           <ThemeBtn />
         </div>
-        <div className="container py-10 px-4 sm:px-6 md:px-10 lg: mx-auto" style={{ minHeight: '80vh', overflowY: 'auto' }}>
+        <div className="container py-10 px-4 sm:px-6 md:px-10 mx-auto" style={{ minHeight: '80vh', overflowY: 'auto' }}>
           {Table().map((section, sectionIndex) => (
             <div key={sectionIndex} className="border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden mb-8">
               <div className="flex justify-between items-center bg-white p-4">
