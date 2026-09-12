@@ -17,6 +17,8 @@ import Subjects from './Components/Classroom/Semester/Subjects/Subjects';
 import About from './Components/About/About';
 import Spinner from './Components/Spinner/Spinner';
 import Playground from './Components/Playground/Playground';
+import Blogs from './Components/Blog/Blogs';
+import BlogPost from './Components/Blog/BlogPost';
 import TeacherSignin from './Components/Teacher/TeacherSignin';
 import TeacherSignup from './Components/Teacher/TeacherSignup';
 import TeacherDashboard from './Components/Teacher/TeacherDashboard';
@@ -206,8 +208,24 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/about-us" 
+        <Route
+          path="/blogs"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Blogs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blogs/:slug"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <BlogPost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about-us"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
               <About />

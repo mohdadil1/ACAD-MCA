@@ -132,6 +132,15 @@ app.post('/slides/upload-signature', isAuthenticated, isTeacher, slides.getUploa
 app.post('/slides', isAuthenticated, isTeacher, slides.create);
 app.delete('/slides/:id', isAuthenticated, isTeacher, slides.remove);
 
+// Blog posts -- readable by any signed-in user, mutable only by teachers.
+const blogs = require('./controller/blogs');
+
+app.get('/blogs', isAuthenticated, blogs.list);
+app.get('/blogs/:slug', isAuthenticated, blogs.getBySlug);
+app.post('/blogs', isAuthenticated, isTeacher, blogs.create);
+app.put('/blogs/:id', isAuthenticated, isTeacher, blogs.update);
+app.delete('/blogs/:id', isAuthenticated, isTeacher, blogs.remove);
+
 // MongoDB Connection
 mongoose.connect(mongoUri)
   .then(() => {
