@@ -17,6 +17,9 @@ import Subjects from './Components/Classroom/Semester/Subjects/Subjects';
 import About from './Components/About/About';
 import Spinner from './Components/Spinner/Spinner';
 import Playground from './Components/Playground/Playground';
+import TeacherSignin from './Components/Teacher/TeacherSignin';
+import TeacherSignup from './Components/Teacher/TeacherSignup';
+import TeacherDashboard from './Components/Teacher/TeacherDashboard';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;  
@@ -27,7 +30,7 @@ const ProtectedRoute = ({ isAuthenticated, children, ...rest }) => {
   }
   return (
     <>
-      <NavBar 
+      <NavBar
         name={rest.name}
         setName={rest.setName}
         setToken={rest.setToken}
@@ -38,13 +41,23 @@ const ProtectedRoute = ({ isAuthenticated, children, ...rest }) => {
   );
 };
 
+const TeacherProtectedRoute = ({ isTeacherAuthenticated, children }) => {
+  if (!isTeacherAuthenticated) {
+    return <Navigate to="/teacher/signin" />;
+  }
+  return children;
+};
+
 function App() {
   const [name, setName] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('Token') || ''); 
+  const [token, setToken] = useState(localStorage.getItem('Token') || '');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
   const location = useLocation();
+
+  const [teacherName, setTeacherName] = useState(localStorage.getItem('TeacherName') || '');
+  const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState(!!localStorage.getItem('TeacherToken'));
 
   useEffect(() => {
     const checkSession = async () => {
@@ -126,6 +139,23 @@ function App() {
         <Route path="/signin" element={<Signin setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/forgotpassword" element={<ForgetPassword />} />
         <Route path="/changepassword" element={<ChangePassword />} />
+        <Route
+          path="/teacher/signin"
+          element={<TeacherSignin setTeacherName={setTeacherName} setIsTeacherAuthenticated={setIsTeacherAuthenticated} />}
+        />
+        <Route path="/teacher/signup" element={<TeacherSignup />} />
+        <Route
+          path="/teacher/dashboard"
+          element={
+            <TeacherProtectedRoute isTeacherAuthenticated={isTeacherAuthenticated}>
+              <TeacherDashboard
+                teacherName={teacherName}
+                setTeacherName={setTeacherName}
+                setIsTeacherAuthenticated={setIsTeacherAuthenticated}
+              />
+            </TeacherProtectedRoute>
+          }
+        />
 
         {/* Protected Routes */}
         <Route 

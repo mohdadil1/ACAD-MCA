@@ -1,0 +1,100 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+function TeacherSignin({ setTeacherName, setIsTeacherAuthenticated }) {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const res = await axios.post(`${apiUrl}/teacher/signin`, { email, password }, { withCredentials: true });
+      localStorage.setItem('TeacherToken', res.data.token);
+      localStorage.setItem('TeacherName', res.data.name);
+      setTeacherName(res.data.name);
+      setIsTeacherAuthenticated(true);
+      setMessage('Signin success.');
+      setIsSuccess(true);
+      setTimeout(() => navigate('/teacher/dashboard'), 400);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Signin failed.');
+      setIsSuccess(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-brand-dark">
+      <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">
+        <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-2">TEACHER SIGN IN</h1>
+        <p className="text-center text-gray-500 mb-8 text-sm">Course &amp; content management portal</p>
+
+        <form onSubmit={handleSubmit}>
+          <label className="block mb-2 text-gray-700 font-semibold">Email</label>
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            type="email"
+            required
+          />
+
+          <label className="block mb-2 text-gray-700 font-semibold">Password</label>
+          <div className="relative mb-6">
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              type={showPassword ? 'text' : 'password'}
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {!showPassword ? (
+                <EyeSlashIcon className="h-6 w-6 text-gray-500" />
+              ) : (
+                <EyeIcon className="h-6 w-6 text-gray-500" />
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`bg-gradient-to-r from-brand-600 to-brand-500 text-white w-full p-3 rounded-lg font-semibold shadow-md hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/30 transition-all ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {loading ? 'Submitting...' : 'SIGN IN'}
+          </button>
+        </form>
+
+        {message && (
+          <p className={`text-center mt-4 ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>{message}</p>
+        )}
+
+        <Link className="text-center block mt-6 text-brand-600 hover:text-brand-700 hover:underline" to="/teacher/signup">
+          Create a teacher account
+        </Link>
+        <Link className="text-center block mt-2 text-gray-400 hover:text-gray-500 hover:underline text-sm" to="/signin">
+          Student sign in
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default TeacherSignin;

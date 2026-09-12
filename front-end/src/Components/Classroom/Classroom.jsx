@@ -1,16 +1,43 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import Card from "../UI/Card/Card";
 import Jumbotron from '../UI/Jumbotron/Jumbotron';
-import { COURSES, ORDINAL_YEAR } from './Courses/Courses';
+import { ORDINAL_YEAR } from './ordinalYear';
 import './Classroom.css';
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Classroom = () => {
     const { course } = useParams();
-    const courseInfo = COURSES.find((c) => c.id === course);
-    const courseName = courseInfo ? courseInfo.name : course?.toUpperCase();
+    const [courseInfo, setCourseInfo] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    if (!courseInfo || !courseInfo.available) {
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}/courses`, { withCredentials: true });
+                const found = res.data.find((c) => c.key === course);
+                setCourseInfo(found || null);
+            } catch (err) {
+                setCourseInfo(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourse();
+    }, [course]);
+
+    if (loading) {
+        return (
+            <Fragment>
+                <Jumbotron title="Classroom" description="Loading…" />
+            </Fragment>
+        );
+    }
+
+    if (!courseInfo) {
+        const courseName = course?.toUpperCase();
         return (
             <Fragment>
                 <Jumbotron title={`${courseName} Classroom`} description="Semester wise Teacher's Slides and notes..." />
@@ -29,15 +56,15 @@ const Classroom = () => {
 
     return (
         <Fragment>
-            <Jumbotron title={`${courseName} Classroom`} description="Choose your year to see the semesters" />
+            <Jumbotron title={`${courseInfo.name} Classroom`} description="Choose your year to see the semesters" />
             <div className="classroom">
                 <div className="card-deck">
                     {years.map((year) => (
                         <Card
                             key={year}
-                            title={ORDINAL_YEAR[year]}
+                            title={ORDINAL_YEAR[year] || `Year ${year}`}
                             link={`/classroom/${course}/year${year}`}
-                            linkText={`Go to ${ORDINAL_YEAR[year]}`}
+                            linkText={`Go to Year ${year}`}
                         />
                     ))}
                 </div>

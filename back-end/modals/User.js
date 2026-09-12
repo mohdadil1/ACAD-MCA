@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema({
   isGoogleUser: {
     type: Boolean,
     default: false
+  },
+  role: {
+    type: String,
+    enum: ['student', 'teacher'],
+    default: 'student'
   }
 });
 

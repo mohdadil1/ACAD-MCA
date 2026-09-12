@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const multer = require('multer');
 require('dotenv').config();
 
 if (process.env.NODE_ENV !== 'production') {
@@ -19,6 +20,8 @@ require('./modals/User');
 const port = process.env.PORT || 3000;
 const app = express();
 const isAuthenticated = require('./controller/user').isAuthenticated;
+const isTeacher = require('./controller/teacher').isTeacher;
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
 
 app.set('trust proxy', 1);
@@ -101,6 +104,30 @@ app.get('/check-auth', isAuthenticated, (req, res) => {
 
 // Code playground execution (proxies to Judge0, keeps the RapidAPI key server-side)
 app.post('/execute', isAuthenticated, require('./controller/playground').execute);
+
+// Teacher portal auth (separate from student signup/signin; requires an invite code)
+app.post('/teacher/signup', require('./controller/teacher').signup);
+app.post('/teacher/signin', require('./controller/teacher').signin);
+
+// Course / Subject / Slide content -- readable by any signed-in user,
+// mutable only by teachers.
+const courses = require('./controller/courses');
+const subjects = require('./controller/subjects');
+const slides = require('./controller/slides');
+
+app.get('/courses', isAuthenticated, courses.list);
+app.post('/courses', isAuthenticated, isTeacher, courses.create);
+app.put('/courses/:id', isAuthenticated, isTeacher, courses.update);
+app.delete('/courses/:id', isAuthenticated, isTeacher, courses.remove);
+
+app.get('/courses/:courseKey/subjects', isAuthenticated, subjects.listByCourseAndSemester);
+app.post('/subjects', isAuthenticated, isTeacher, subjects.create);
+app.put('/subjects/:id', isAuthenticated, isTeacher, subjects.update);
+app.delete('/subjects/:id', isAuthenticated, isTeacher, subjects.remove);
+
+app.get('/subjects/:subjectId/slides', isAuthenticated, slides.listBySubject);
+app.post('/slides', isAuthenticated, isTeacher, upload.single('file'), slides.upload);
+app.delete('/slides/:id', isAuthenticated, isTeacher, slides.remove);
 
 // MongoDB Connection
 mongoose.connect(mongoUri)

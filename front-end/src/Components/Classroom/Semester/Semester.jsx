@@ -1,42 +1,63 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import './Semester.css';
 import Cards from './Cards/Cards';
 import Jumbotron from '../../UI/Jumbotron/Jumbotron';
 import { useParams } from 'react-router';
-import * as subjects from '../../../New_Subjects.json';
+import axios from 'axios';
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Semester = () => {
 	const { course, year, semester } = useParams();
-	const cardsContainer = [];
+	const [subjects, setSubjects] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
 
-	let jumboTitle = semester === 'semester1' ? 'Semester 1' 
-	: semester === 'semester2' ? 'Semester 2' 
-	: semester === 'semester3' ? 'Semester 3' 
-	: semester === 'semester4' ? 'Semester 4' 
-	: semester === 'semester5' ? 'Semester 5' 
-	: 'Semester 6';
+	const semesterNumber = parseInt((semester || '').replace('semester', ''), 10);
+	const jumboTitle = semesterNumber ? `Semester ${semesterNumber}` : 'Semester';
 
-	for (let key in subjects.default[semester]) {
-		var obj = subjects.default[semester][key];
-		var title = obj.subjectName;
-		var code = obj.subjectCode;
-		var credits = obj.credits;
-		cardsContainer.push(
-			<Cards
-				title={title}
-				link={`/classroom/${course}/${year}/${semester}/${obj.id}`}
-				code={code}
-				credits={credits}
-				linkText="Go to Subject1"
-				key={obj.id}
-			/>
-		);
-	}
+	useEffect(() => {
+		const fetchSubjects = async () => {
+			setLoading(true);
+			setError('');
+			try {
+				const res = await axios.get(`${apiUrl}/courses/${course}/subjects`, {
+					params: { semester: semesterNumber },
+					withCredentials: true,
+				});
+				setSubjects(res.data);
+			} catch (err) {
+				setError('Failed to load subjects. Please try again.');
+			} finally {
+				setLoading(false);
+			}
+		};
+		if (course && semesterNumber) fetchSubjects();
+	}, [course, semesterNumber]);
+
 	return (
 		<Fragment>
 			<Jumbotron title={jumboTitle} description="You will find here subject-wise resources for this semester" />
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 mb-12">
-				<div className="card-deck">{cardsContainer}</div>
+				{loading && <p className="text-center text-gray-500 font-sans">Loading subjects…</p>}
+				{error && <p className="text-center text-red-500 font-sans">{error}</p>}
+				{!loading && !error && subjects.length === 0 && (
+					<p className="text-center text-gray-500 font-sans">No subjects have been added for this semester yet.</p>
+				)}
+				{!loading && !error && subjects.length > 0 && (
+					<div className="card-deck">
+						{subjects.map((subject) => (
+							<Cards
+								key={subject._id}
+								title={subject.subjectName}
+								link={`/classroom/${course}/${year}/${semester}/${subject._id}`}
+								code={subject.subjectCode}
+								credits={subject.credits}
+								linkText="Go to Subject"
+							/>
+						))}
+					</div>
+				)}
 			</div>
 		</Fragment>
 	);
