@@ -132,6 +132,9 @@ const About = () => {
             </a>
             </div>
            </section>
+           <footer className="bg-brand-dark py-4">
+             <p className="text-center text-slate-300 font-sans text-sm">&copy; 2022 ACAD. All rights reserved.</p>
+           </footer>
           </>
   );
 }
