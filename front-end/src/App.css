@@ -44,7 +44,7 @@ a:hover {
 }
 
 .card-deck .card {
-  min-width: 18rem !important;
+  min-width: min(18rem, 100%) !important;
   margin-bottom: 10px !important;
   max-width: 100%; /* Allow max-width to be controlled by the grid */
 }
