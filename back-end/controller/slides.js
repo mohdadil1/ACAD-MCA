@@ -3,26 +3,24 @@ const cloudinary = require('../config/cloudinary');
 const Slide = require('../modals/Slide');
 const Subject = require('../modals/Subject');
 
-const uploadBufferToCloudinary = (buffer, originalName) =>
-  new Promise((resolve, reject) => {
-    // Cloudinary's "raw" resource type has no concept of a file's real format
-    // beyond the extension in its delivery URL -- without one it serves the
-    // file as a generic application/octet-stream, which browsers download
-    // instead of rendering inline. Carry the original extension through so
-    // e.g. a .pdf still ends in .pdf and opens in the viewer instead.
-    const ext = path.extname(originalName || '').toLowerCase();
-    const baseName = path
-      .basename(originalName || 'slide', ext)
-      .replace(/[^a-zA-Z0-9_-]/g, '_')
-      .slice(0, 80);
-    const publicId = `${baseName}-${Date.now()}${ext}`;
-
-    const stream = cloudinary.uploader.upload_stream(
-      { resource_type: 'raw', folder: 'acad-mca/slides', public_id: publicId },
-      (err, result) => (err ? reject(err) : resolve(result))
-    );
-    stream.end(buffer);
-  });
+// Vercel serverless functions cap the request body at 4.5MB, which real
+// lecture slides (PPT/PDF, often several MB) blow past easily. So the file
+// bytes never go through our backend at all: the browser uploads directly
+// to Cloudinary using a short-lived signed request, and only the resulting
+// (tiny) URL/metadata is sent to us afterward via `create`.
+const buildPublicId = (originalName) => {
+  // Cloudinary's "raw" resource type has no concept of a file's real format
+  // beyond the extension in its delivery URL -- without one it serves the
+  // file as a generic application/octet-stream, which browsers download
+  // instead of rendering inline. Carry the original extension through so
+  // e.g. a .pdf still ends in .pdf and opens in the viewer instead.
+  const ext = path.extname(originalName || '').toLowerCase();
+  const baseName = path
+    .basename(originalName || 'slide', ext)
+    .replace(/[^a-zA-Z0-9_-]/g, '_')
+    .slice(0, 80);
+  return `acad-mca/slides/${baseName}-${Date.now()}${ext}`;
+};
 
 const listBySubject = async (req, res) => {
   try {
@@ -33,39 +31,55 @@ const listBySubject = async (req, res) => {
   }
 };
 
-const upload = async (req, res) => {
+const getUploadSignature = (req, res) => {
   try {
-    const { subject, heading, title } = req.body;
-    if (!subject || !heading) {
-      return res.status(400).json({ message: 'subject and heading are required' });
+    const { filename } = req.body;
+    if (!filename) {
+      return res.status(400).json({ message: 'filename is required' });
     }
-    if (!req.file) {
-      return res.status(400).json({ message: 'A file is required' });
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return res.status(500).json({ message: 'File storage is not configured on the server' });
+    }
+
+    const publicId = buildPublicId(filename);
+    const timestamp = Math.round(Date.now() / 1000);
+    const signature = cloudinary.utils.api_sign_request(
+      { public_id: publicId, timestamp },
+      process.env.CLOUDINARY_API_SECRET
+    );
+
+    res.status(200).json({
+      signature,
+      timestamp,
+      publicId,
+      apiKey: process.env.CLOUDINARY_API_KEY,
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    });
+  } catch (err) {
+    console.error('Signature generation error:', err.message);
+    res.status(500).json({ message: 'Failed to generate upload signature' });
+  }
+};
+
+const create = async (req, res) => {
+  try {
+    const { subject, heading, title, url, publicId } = req.body;
+    if (!subject || !heading || !url) {
+      return res.status(400).json({ message: 'subject, heading and url are required' });
     }
 
     const subjectDoc = await Subject.findById(subject);
     if (!subjectDoc) {
       return res.status(404).json({ message: 'Subject not found' });
     }
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      return res.status(500).json({ message: 'File storage is not configured on the server' });
-    }
 
-    const result = await uploadBufferToCloudinary(req.file.buffer, req.file.originalname);
-
-    const slide = new Slide({
-      subject,
-      heading,
-      title: title || '',
-      url: result.secure_url,
-      publicId: result.public_id,
-    });
+    const slide = new Slide({ subject, heading, title: title || '', url, publicId: publicId || '' });
     await slide.save();
 
     res.status(201).json(slide);
   } catch (err) {
-    console.error('Slide upload error:', err.message);
-    res.status(500).json({ message: 'Failed to upload slide' });
+    console.error('Slide create error:', err.message);
+    res.status(500).json({ message: 'Failed to save slide' });
   }
 };
 
@@ -101,4 +115,4 @@ const deleteSlidesForSubject = async (subjectId) => {
   await Slide.deleteMany({ subject: subjectId });
 };
 
-module.exports = { listBySubject, upload, remove, deleteSlidesForSubject };
+module.exports = { listBySubject, getUploadSignature, create, remove, deleteSlidesForSubject };

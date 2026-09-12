@@ -177,19 +177,46 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
     }
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('subject', selectedSubject._id);
-      formData.append('heading', slideForm.heading);
-      formData.append('title', slideForm.title);
-      formData.append('file', slideForm.file);
+      // 1. Get a signed, short-lived upload authorization from our backend
+      // (a tiny JSON request -- well under any size limit).
+      const sigRes = await axios.post(
+        `${apiUrl}/slides/upload-signature`,
+        { filename: slideForm.file.name },
+        authHeaders()
+      );
+      const { signature, timestamp, publicId, apiKey, cloudName } = sigRes.data;
 
-      await axios.post(`${apiUrl}/slides`, formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('TeacherToken')}`,
-          'Content-Type': 'multipart/form-data',
+      // 2. Upload the actual file bytes straight to Cloudinary from the
+      // browser. This bypasses our Vercel backend entirely, so its 4.5MB
+      // serverless request-body limit never applies to the real file --
+      // only to the small JSON requests before/after it. A bare axios
+      // instance is used so this request doesn't pick up our app's own
+      // Authorization header or baseURL defaults.
+      const cloudForm = new FormData();
+      cloudForm.append('file', slideForm.file);
+      cloudForm.append('api_key', apiKey);
+      cloudForm.append('timestamp', timestamp);
+      cloudForm.append('signature', signature);
+      cloudForm.append('public_id', publicId);
+
+      const cloudRes = await axios.create().post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
+        cloudForm
+      );
+
+      // 3. Save just the resulting URL/metadata through our own backend.
+      await axios.post(
+        `${apiUrl}/slides`,
+        {
+          subject: selectedSubject._id,
+          heading: slideForm.heading,
+          title: slideForm.title,
+          url: cloudRes.data.secure_url,
+          publicId: cloudRes.data.public_id,
         },
-        withCredentials: true,
-      });
+        authHeaders()
+      );
+
       setSlideForm(emptySlideForm);
       loadSlides(selectedSubject._id);
     } catch (err) {

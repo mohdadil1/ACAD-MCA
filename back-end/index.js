@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const multer = require('multer');
 require('dotenv').config();
 
 if (process.env.NODE_ENV !== 'production') {
@@ -21,7 +20,6 @@ const port = process.env.PORT || 3000;
 const app = express();
 const isAuthenticated = require('./controller/user').isAuthenticated;
 const isTeacher = require('./controller/teacher').isTeacher;
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
 
 app.set('trust proxy', 1);
@@ -126,7 +124,8 @@ app.put('/subjects/:id', isAuthenticated, isTeacher, subjects.update);
 app.delete('/subjects/:id', isAuthenticated, isTeacher, subjects.remove);
 
 app.get('/subjects/:subjectId/slides', isAuthenticated, slides.listBySubject);
-app.post('/slides', isAuthenticated, isTeacher, upload.single('file'), slides.upload);
+app.post('/slides/upload-signature', isAuthenticated, isTeacher, slides.getUploadSignature);
+app.post('/slides', isAuthenticated, isTeacher, slides.create);
 app.delete('/slides/:id', isAuthenticated, isTeacher, slides.remove);
 
 // MongoDB Connection
