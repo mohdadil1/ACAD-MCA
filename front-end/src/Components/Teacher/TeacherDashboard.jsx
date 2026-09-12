@@ -189,9 +189,15 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
       // 2. Upload the actual file bytes straight to Cloudinary from the
       // browser. This bypasses our Vercel backend entirely, so its 4.5MB
       // serverless request-body limit never applies to the real file --
-      // only to the small JSON requests before/after it. A bare axios
-      // instance is used so this request doesn't pick up our app's own
-      // Authorization header or baseURL defaults.
+      // only to the small JSON requests before/after it.
+      //
+      // Uses plain fetch rather than axios: Cloudinary's CORS response
+      // doesn't include Access-Control-Allow-Credentials, and our app sets
+      // axios.defaults.withCredentials = true globally (even a fresh
+      // axios.create() inherits that), so a credentialed cross-origin
+      // request here gets silently blocked by the browser as a CORS
+      // violation -- fetch doesn't send credentials cross-origin unless
+      // explicitly told to, so it isn't affected.
       const cloudForm = new FormData();
       cloudForm.append('file', slideForm.file);
       cloudForm.append('api_key', apiKey);
@@ -199,10 +205,14 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
       cloudForm.append('signature', signature);
       cloudForm.append('public_id', publicId);
 
-      const cloudRes = await axios.create().post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,
-        cloudForm
-      );
+      const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`, {
+        method: 'POST',
+        body: cloudForm,
+      });
+      const cloudData = await cloudRes.json();
+      if (!cloudRes.ok) {
+        throw new Error(cloudData.error?.message || 'Cloudinary upload failed');
+      }
 
       // 3. Save just the resulting URL/metadata through our own backend.
       await axios.post(
@@ -211,8 +221,8 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
           subject: selectedSubject._id,
           heading: slideForm.heading,
           title: slideForm.title,
-          url: cloudRes.data.secure_url,
-          publicId: cloudRes.data.public_id,
+          url: cloudData.secure_url,
+          publicId: cloudData.public_id,
         },
         authHeaders()
       );
@@ -220,7 +230,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
       setSlideForm(emptySlideForm);
       loadSlides(selectedSubject._id);
     } catch (err) {
-      setSlideError(err.response?.data?.message || 'Failed to upload slide.');
+      setSlideError(err.response?.data?.message || err.message || 'Failed to upload slide.');
     } finally {
       setUploading(false);
     }
