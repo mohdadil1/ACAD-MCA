@@ -77,7 +77,7 @@ const About = () => {
                         <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Pallavi Yadav</h3>
                         <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
                         <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Front-end Developer</h4>
-                        <p className="font-medium mb-4 mt-0 font-sans">Sleep over everything!.</p>
+                        <p className="font-medium mb-4 mt-0 font-sans">Sleep over everything!</p>
                         <div className="flex flex-row justify-center">
                           <div className="p-6">
                             <a
