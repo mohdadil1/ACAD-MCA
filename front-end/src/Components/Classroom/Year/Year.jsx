@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "../../UI/Card/Card";
 import Jumbotron from '../../UI/Jumbotron/Jumbotron';
+import BackLink from '../BackLink';
 import { ORDINAL_YEAR } from '../ordinalYear';
 import '../Classroom.css';
 
@@ -36,6 +37,7 @@ const Year = () => {
                 title={`${courseName} - ${ORDINAL_YEAR[yearNumber] || `Year ${yearNumber}`}`}
                 description="Choose your semester to see subject-wise resources"
             />
+            <BackLink to={`/classroom/${course}`} label={`Back to ${courseName} Classroom`} />
             <div className="classroom">
                 <div className="card-deck">
                     <Card

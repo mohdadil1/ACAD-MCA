@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "../UI/Card/Card";
 import Jumbotron from '../UI/Jumbotron/Jumbotron';
+import BackLink from './BackLink';
 import { ORDINAL_YEAR } from './ordinalYear';
 import './Classroom.css';
 
@@ -41,6 +42,7 @@ const Classroom = () => {
         return (
             <Fragment>
                 <Jumbotron title={`${courseName} Classroom`} description="Semester wise Teacher's Slides and notes..." />
+                <BackLink to="/classroom" label="Back to Courses" />
                 <div className="classroom">
                     <div className="text-center py-12 px-4">
                         <p className="text-xl text-gray-500 font-sans">
@@ -57,6 +59,7 @@ const Classroom = () => {
     return (
         <Fragment>
             <Jumbotron title={`${courseInfo.name} Classroom`} description="Choose your year to see the semesters" />
+            <BackLink to="/classroom" label="Back to Courses" />
             <div className="classroom">
                 <div className="card-deck">
                     {years.map((year) => (

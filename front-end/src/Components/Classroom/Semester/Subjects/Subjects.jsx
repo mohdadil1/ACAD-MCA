@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Cards from './Cards/Cards';
 import Jumbotron from '../../../UI/Jumbotron/Jumbotron';
+import BackLink from '../../BackLink';
 import { useParams } from 'react-router';
 import axios from 'axios';
 import './Subjects.css';
@@ -10,7 +11,7 @@ import { ReferenceDataContext } from '../../../Context/referenceDataContext';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Subjects = () => {
-	const { subject } = useParams();
+	const { course, year, semester, subject } = useParams();
 
 	const [slides, setSlides] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ const Subjects = () => {
 		<Fragment>
 			<ReferenceDataContext.Provider value={{ url, setUrl, modalTitle, setModalTitle, showModal, setShowModal }}>
 				<Jumbotron title="Teacher's Section" description="Here are all the slides which you need..." />
+				<BackLink to={`/classroom/${course}/${year}/${semester}`} label="Back to Subjects" />
 				<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 mb-12">
 					{loading && <p className="text-center text-gray-500 font-sans">Loading slides…</p>}
 					{error && <p className="text-center text-red-500 font-sans">{error}</p>}

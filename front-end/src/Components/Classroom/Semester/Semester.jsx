@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import './Semester.css';
 import Cards from './Cards/Cards';
 import Jumbotron from '../../UI/Jumbotron/Jumbotron';
+import BackLink from '../BackLink';
 import { useParams } from 'react-router';
 import axios from 'axios';
 
@@ -38,6 +39,7 @@ const Semester = () => {
 	return (
 		<Fragment>
 			<Jumbotron title={jumboTitle} description="You will find here subject-wise resources for this semester" />
+			<BackLink to={`/classroom/${course}/${year}`} label="Back to Semesters" />
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 mb-12">
 				{loading && <p className="text-center text-gray-500 font-sans">Loading subjects…</p>}
 				{error && <p className="text-center text-red-500 font-sans">{error}</p>}
