@@ -34,7 +34,7 @@ const About = () => {
                   <div className="flex flex-col items-center">
                     <img
                       className="rounded-md w-full h-auto mb-3 max-w-[85%]"
-                      src="/my.png"
+                      src="/my.jpg"
                       alt="Adil"
                     />
                     <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Mohd Adil</h3>
@@ -78,7 +78,7 @@ const About = () => {
                       <div className="flex flex-col items-center">
                         <img
                           className="rounded-md w-full h-auto mb-3 max-w-[85%]"
-                          src="/pallavi22-new.png"
+                          src="/pallavi22-new.jpg"
                           alt="Pallavi"
                         />
                         <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Pallavi Yadav</h3>
