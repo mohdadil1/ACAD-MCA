@@ -19,6 +19,12 @@ const Section = () => {
 					linkText="Placement"
 				/>
 				<Card
+					title="Playground"
+					description="Write and run C, C++, Java, Python or JavaScript right in your browser"
+					link="/playground"
+					linkText="Go to Playground"
+				/>
+				<Card
 					title="Blogs"
 					description="Love Reading? You're at the right place!"
 					link="/blogs"
