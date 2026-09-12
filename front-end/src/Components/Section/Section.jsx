@@ -7,10 +7,10 @@ const Section = () => {
 		<div className="flex flex-col items-center justify-center w-full bg-gradient-to-b from-white to-slate-100 p-4 sm:p-8 sm:py-16">
 			<div className="card-deck">
 				<Card
-					title="Classroom"
+					title="Courses"
 					description="Find class notes, teacher's slides and other related stuffs"
 					link="/classroom"
-					linkText="Go to Classroom"
+					linkText="Go to Courses"
 				/>
 				<Card
 					title="Coding Sheet "

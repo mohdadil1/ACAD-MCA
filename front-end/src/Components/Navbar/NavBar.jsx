@@ -67,7 +67,7 @@ const NavBar = ({ name, setName, setToken,setIsAuthenticated }) => {
             Home
           </Link>
           <Link to="/classroom" className={getLinkClass('/classroom')}>
-            Classroom
+            Courses
           </Link>
           <Link to="/coding" className={getLinkClass('/coding')}>
             CSheet
@@ -132,7 +132,7 @@ const NavBar = ({ name, setName, setToken,setIsAuthenticated }) => {
                 className={getLinkClass('/classroom')}
                 onClick={closeMenu}
               >
-                Classroom
+                Courses
               </Link>
             </li>
             <li>
