@@ -3,6 +3,21 @@ import { ReferenceDataContext } from "../../Components/Context/referenceDataCont
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../Modal/Modal.css';
 
+// Browsers have no built-in renderer for Office document formats (unlike
+// PDF, which Chrome/Firefox/Edge all render natively) -- route those
+// through Microsoft's free, no-signup Office Online Viewer, which can
+// render any publicly reachable .ppt/.pptx/.doc/.docx/.xls/.xlsx inline.
+const OFFICE_EXTENSIONS = ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'];
+
+const getViewerSrc = (fileUrl) => {
+    if (!fileUrl) return fileUrl;
+    const ext = fileUrl.split('?')[0].split('.').pop().toLowerCase();
+    if (OFFICE_EXTENSIONS.includes(ext)) {
+        return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
+    }
+    return fileUrl;
+};
+
 const Modal = () => {
     const { url, modalTitle, showModal, setShowModal } = useContext(ReferenceDataContext);
 
@@ -59,7 +74,7 @@ const Modal = () => {
                             width="100%"
                             height="100%"
                             title="pdfViewerFrame"
-                            src={url}
+                            src={getViewerSrc(url)}
                         >
                             <p>Your browser does not support iframes.</p>
                         </iframe>
