@@ -6,6 +6,14 @@ const cors = require('cors');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
+
+if (process.env.NODE_ENV !== 'production') {
+  // Some local Windows setups can't resolve mongodb+srv SRV/TXT records via
+  // the default resolver even though the OS itself can; point Node's
+  // resolver at a public DNS server for local dev only.
+  require('dns').setServers(['8.8.8.8', '1.1.1.1']);
+}
+
 require('./modals/User');
 
 const port = process.env.PORT || 3000;
@@ -90,6 +98,9 @@ app.get('/check-session', (req, res) => {
 app.get('/check-auth', isAuthenticated, (req, res) => {
   res.json({ message: `Welcome, ${req.userEmail}!` });
 });
+
+// Code playground execution (proxies to Judge0, keeps the RapidAPI key server-side)
+app.post('/execute', isAuthenticated, require('./controller/playground').execute);
 
 // MongoDB Connection
 mongoose.connect(mongoUri)

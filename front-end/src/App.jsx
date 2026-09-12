@@ -14,6 +14,7 @@ import Semester from './Components/Classroom/Semester/Semester';
 import Subjects from './Components/Classroom/Semester/Subjects/Subjects';
 import About from './Components/About/About';
 import Spinner from './Components/Spinner/Spinner';
+import Playground from './Components/Playground/Playground';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;  
@@ -141,13 +142,21 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/coding" 
+        <Route
+          path="/coding"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
               <Coding />
             </ProtectedRoute>
-          } 
+          }
+        />
+        <Route
+          path="/playground"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} name={name} setName={setName} setToken={setToken} setIsAuthenticated={setIsAuthenticated}>
+              <Playground />
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/about-us" 
