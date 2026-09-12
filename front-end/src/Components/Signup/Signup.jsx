@@ -119,7 +119,7 @@ function Signup() {
     return (
         <div className="flex items-center justify-center min-h-screen relative bg">
             <div className="absolute top-5 left-5 text-4xl font-bold moving-text">
-                ACAD MCA
+                ACAD
             </div>
 
             <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">

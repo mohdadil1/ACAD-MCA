@@ -47,10 +47,10 @@ const NavBar = ({ name, setName, setToken,setIsAuthenticated }) => {
               src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png"
               width="30"
               height="30"
-              alt="MCA Box Logo"
+              alt="ACAD Logo"
               className="mr-2 rounded"
             />
-            <span className="text-lg font-semibold hidden sm:inline bg-gradient-to-r from-brand-300 to-cyan-300 text-transparent bg-clip-text">ACAD MCA</span>
+            <span className="text-lg font-semibold hidden sm:inline bg-gradient-to-r from-brand-300 to-cyan-300 text-transparent bg-clip-text">ACAD</span>
           </Link>
         </div>
 

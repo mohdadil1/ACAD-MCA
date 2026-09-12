@@ -4,15 +4,15 @@ const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const sendEmail = async (to, name) => {
-    const subject = "Welcome to ACAD MCA!";
-    const text = `Hi ${name},\n\nThank you for signing up with ACAD MCA! We’re thrilled to have you on board.\n\nBest regards,\nThe ACAD MCA Team`;
+    const subject = "Welcome to ACAD!";
+    const text = `Hi ${name},\n\nThank you for signing up with ACAD! We’re thrilled to have you on board.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome to ACAD MCA</title>
+            <title>Welcome to ACAD</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -56,16 +56,16 @@ const sendEmail = async (to, name) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo">
+                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome to ACAD MCA, ${name}!</h1>
-                    <p>Thank you for signing up with ACAD MCA! We’re thrilled to have you on board.</p>
+                    <h1>Welcome to ACAD, ${name}!</h1>
+                    <p>Thank you for signing up with ACAD! We’re thrilled to have you on board.</p>
                     <p>If you have any questions or need assistance, feel free to reach out to us.</p>
-                    <p>Best regards,<br>The ACAD MCA Team</p>
+                    <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
+                    <p>&copy; 2024 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -81,7 +81,7 @@ const sendEmail = async (to, name) => {
     });
 
     let info = await transporter.sendMail({
-        from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+        from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
         to,
         subject,
         text,
@@ -118,15 +118,15 @@ const signup = (req, res) => {
         });
 };
 const sendGoogleSignupEmail = async (email, name) => {
-    const subject = "Welcome to ACAD MCA!";
-    const text = `Hi ${name},\n\nThank you for signing up using Google! We are thrilled to have you on board.\n\nACAD MCA is your virtual classroom designed to provide all the resources you need during your MCA journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!\n\nIf you have any questions or need assistance, feel free to reach out to us anytime. We're here to support you!\n\nBest regards,\nThe ACAD MCA Team`;
+    const subject = "Welcome to ACAD!";
+    const text = `Hi ${name},\n\nThank you for signing up using Google! We are thrilled to have you on board.\n\nACAD is your virtual classroom designed to provide all the resources you need during your academic journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!\n\nIf you have any questions or need assistance, feel free to reach out to us anytime. We're here to support you!\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome to ACAD MCA</title>
+            <title>Welcome to ACAD</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -170,23 +170,23 @@ const sendGoogleSignupEmail = async (email, name) => {
             <div class="container">
                 <!-- Logo Section -->
                 <div class="header">
-                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo">
+                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 
                 <!-- Welcome Section -->
-                <h2 style="color: #333333; font-size: 24px; text-align: center;">Welcome to ACAD MCA, ${name}!</h2>
+                <h2 style="color: #333333; font-size: 24px; text-align: center;">Welcome to ACAD, ${name}!</h2>
                 <div class="content">
                     <p>Thank you for signing up using Google! We are thrilled to have you on board.</p>
-                    <p><strong>ACAD MCA</strong> is your virtual classroom designed to provide all the resources you need during your MCA journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!</p>
+                    <p><strong>ACAD</strong> is your virtual classroom designed to provide all the resources you need during your academic journey. Whether it's study materials or placement preparation, we are here to help you every step of the way!</p>
                     <p>If you have any questions or need assistance, feel free to reach out to us anytime. We're here to support you!</p>
                 </div>
                 
                 <!-- Signature -->
-                <p style="color: #555555; font-size: 16px; line-height: 1.6; text-align: center;">Best regards,<br><strong>The ACAD MCA Team</strong></p>
+                <p style="color: #555555; font-size: 16px; line-height: 1.6; text-align: center;">Best regards,<br><strong>The ACAD Team</strong></p>
                 
                 <!-- Footer -->
                 <div class="footer">
-                    <p>You’re receiving this email because you signed up on ACAD MCA.<br>If this wasn’t you, please contact support immediately.</p>
+                    <p>You’re receiving this email because you signed up on ACAD.<br>If this wasn’t you, please contact support immediately.</p>
                 </div>
             </div>
         </body>
@@ -203,7 +203,7 @@ const sendGoogleSignupEmail = async (email, name) => {
         });
 
         let mailOptions = {
-            from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+            from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
             to: email,
             subject,
             text,
@@ -258,15 +258,15 @@ const gsignup = async (req, res) => {
     }
 };
 const sendSigninEmail = async (to, name) => {
-    const subject = "Welcome back to ACAD MCA!";
-    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD MCA! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD MCA Team`;
+    const subject = "Welcome back to ACAD!";
+    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome back to ACAD MCA</title>
+            <title>Welcome back to ACAD</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -310,15 +310,15 @@ const sendSigninEmail = async (to, name) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo">
+                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome back to ACAD MCA, ${name}!</h1>
-                    <p>We’re glad to see you back on ACAD MCA! If this wasn't you, please contact us immediately.</p>
-                    <p>Best regards,<br>The ACAD MCA Team</p>
+                    <h1>Welcome back to ACAD, ${name}!</h1>
+                    <p>We’re glad to see you back on ACAD! If this wasn't you, please contact us immediately.</p>
+                    <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
+                    <p>&copy; 2024 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -335,7 +335,7 @@ const sendSigninEmail = async (to, name) => {
     });
 
     let info = await transporter.sendMail({
-        from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+        from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
         to,
         subject,
         text,
@@ -390,15 +390,15 @@ const signin = (req, res) => {
         });
 };
 const sendGoogleSigninEmail = async (to, name) => {
-    const subject = "Welcome back to ACAD MCA!";
-    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD MCA! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD MCA Team`;
+    const subject = "Welcome back to ACAD!";
+    const text = `Hi ${name},\n\nWe’re glad to see you back on ACAD! If this wasn't you, please let us know immediately.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome back to ACAD MCA</title>
+            <title>Welcome back to ACAD</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -442,15 +442,15 @@ const sendGoogleSigninEmail = async (to, name) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo">
+                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo">
                 </div>
                 <div class="content">
-                    <h1>Welcome back to ACAD MCA, ${name}!</h1>
-                    <p>We’re glad to see you back on ACAD MCA! If this wasn't you, please contact us immediately.</p>
-                    <p>Best regards,<br>The ACAD MCA Team</p>
+                    <h1>Welcome back to ACAD, ${name}!</h1>
+                    <p>We’re glad to see you back on ACAD! If this wasn't you, please contact us immediately.</p>
+                    <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
+                    <p>&copy; 2024 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -467,7 +467,7 @@ const sendGoogleSigninEmail = async (to, name) => {
     });
 
     let info = await transporter.sendMail({
-        from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+        from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
         to,
         subject,
         text,
@@ -551,7 +551,7 @@ const sendotp = async (req, res) => {
             }
         });
         const mailOptions = {
-            from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+            from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: 'Your OTP Code',
             text: `Your OTP code is: ${otp}`,
@@ -602,7 +602,7 @@ const sendotp = async (req, res) => {
                 <body>
                     <div class="container">
                         <div class="header">
-                            <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo" style="max-width: 150px;">
+                            <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo" style="max-width: 150px;">
                         </div>
                         <div class="content">
                             <h1>OTP Code</h1>
@@ -610,7 +610,7 @@ const sendotp = async (req, res) => {
                             <p>If you did not request this, please ignore this email.</p>
                         </div>
                         <div class="footer">
-                            <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
+                            <p>&copy; 2024 ACAD. All rights reserved.</p>
                             <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                         </div>
                     </div>
@@ -634,7 +634,7 @@ const sendotp = async (req, res) => {
 };
 const sendPasswordUpdatedEmail = async (email) => {
     const subject = "Your Password Has Been Updated";
-    const text = `Hi,\n\nYour password has been successfully updated. If you didn't make this change, please contact support immediately.\n\nBest regards,\nThe ACAD MCA Team`;
+    const text = `Hi,\n\nYour password has been successfully updated. If you didn't make this change, please contact support immediately.\n\nBest regards,\nThe ACAD Team`;
     const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -685,15 +685,15 @@ const sendPasswordUpdatedEmail = async (email) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD MCA Logo" style="max-width: 150px;">
+                    <img src="https://res.cloudinary.com/dta4cujnn/image/upload/v1626255557/logo_qaexch.png" alt="ACAD Logo" style="max-width: 150px;">
                 </div>
                 <div class="content">
                     <h1>Password Updated Successfully</h1>
                     <p>Your password has been successfully updated. If you did not request this change, please contact our support team immediately.</p>
-                    <p>Best regards,<br>The ACAD MCA Team</p>
+                    <p>Best regards,<br>The ACAD Team</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 ACAD MCA. All rights reserved.</p>
+                    <p>&copy; 2024 ACAD. All rights reserved.</p>
                     <p><a href="https://acad-mca.vercel.app">Visit our website</a></p>
                 </div>
             </div>
@@ -710,7 +710,7 @@ const sendPasswordUpdatedEmail = async (email) => {
     });
 
     let mailOptions = {
-        from: `"ACAD MCA Team" <${process.env.EMAIL_USER}>`,
+        from: `"ACAD Team" <${process.env.EMAIL_USER}>`,
         to: email,
         subject,
         text,
