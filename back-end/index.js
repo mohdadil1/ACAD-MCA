@@ -107,7 +107,9 @@ app.get('/check-auth', isAuthenticated, (req, res) => {
 // Code playground execution (proxies to Judge0, keeps the RapidAPI key server-side)
 app.post('/execute', isAuthenticated, require('./controller/playground').execute);
 
-// Teacher portal auth (separate from student signup/signin; requires an invite code)
+// Teacher portal auth (separate from student signup/signin; requires an
+// invite code emailed to the signup address, not a shared static code)
+app.post('/teacher/send-invite-code', require('./controller/teacher').sendInviteCode);
 app.post('/teacher/signup', require('./controller/teacher').signup);
 app.post('/teacher/signin', require('./controller/teacher').signin);
 

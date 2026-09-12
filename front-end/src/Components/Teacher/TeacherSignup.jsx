@@ -15,6 +15,29 @@ function TeacherSignup() {
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sendingCode, setSendingCode] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+
+  const handleSendCode = async () => {
+    if (!email) {
+      setMessage('Enter your email first.');
+      setIsSuccess(false);
+      return;
+    }
+    setSendingCode(true);
+    setMessage('');
+    try {
+      const res = await axios.post(`${apiUrl}/teacher/send-invite-code`, { email });
+      setMessage(res.data.message || 'Invite code sent to your email.');
+      setIsSuccess(true);
+      setCodeSent(true);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to send invite code.');
+      setIsSuccess(false);
+    } finally {
+      setSendingCode(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +65,7 @@ function TeacherSignup() {
     <div className="flex items-center justify-center min-h-screen bg-brand-dark">
       <div className="p-8 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-2xl rounded-2xl bg-white/95 backdrop-blur-sm border border-white/60">
         <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-2">TEACHER SIGN UP</h1>
-        <p className="text-center text-gray-500 mb-8 text-sm">Requires an invite code from the site admin</p>
+        <p className="text-center text-gray-500 mb-8 text-sm">We'll email you a 6-digit invite code to verify your address</p>
 
         <form onSubmit={handleSubmit}>
           <label className="block mb-2 text-gray-700 font-semibold">Name</label>
@@ -55,13 +78,28 @@ function TeacherSignup() {
           />
 
           <label className="block mb-2 text-gray-700 font-semibold">Email</label>
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-brand-500"
-            type="email"
-            required
-          />
+          <div className="flex gap-2 mb-4">
+            <input
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setCodeSent(false);
+              }}
+              value={email}
+              className="flex-1 min-w-0 text-gray-700 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              type="email"
+              required
+            />
+            <button
+              type="button"
+              onClick={handleSendCode}
+              disabled={sendingCode || !email}
+              className={`shrink-0 px-4 rounded-lg font-semibold text-sm border border-brand-500 text-brand-600 hover:bg-brand-50 transition-colors ${
+                sendingCode || !email ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {sendingCode ? 'Sending...' : codeSent ? 'Resend' : 'Send Code'}
+            </button>
+          </div>
 
           <label className="block mb-2 text-gray-700 font-semibold">Password</label>
           <div className="relative mb-4">
@@ -89,8 +127,11 @@ function TeacherSignup() {
           <input
             onChange={(e) => setInviteCode(e.target.value)}
             value={inviteCode}
-            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500"
-            type="password"
+            className="w-full text-gray-700 border border-gray-300 rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500 tracking-widest"
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            placeholder="6-digit code from your email"
             required
           />
 
