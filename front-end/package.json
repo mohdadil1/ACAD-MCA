@@ -17,6 +17,8 @@
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^5.16.7",
     "@react-oauth/google": "^0.12.1",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
     "bootstrap4": "^0.0.1-security",

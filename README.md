@@ -28,8 +28,9 @@ Teacher signup is invite-gated: enter your email, click **Send Code**, and a 6-d
 - **Frontend:** React 18 + Vite, Tailwind CSS, react-router-dom
 - **Backend:** Node.js + Express, Mongoose (MongoDB), express-session
 - **Auth:** JWT + server-side sessions, Google OAuth, Twilio Verify (phone OTP), Nodemailer (email OTP/invite codes)
-- **Other integrations:** Cloudinary (slide uploads), Judge0 via RapidAPI (Playground code execution)
-- **Hosting:** Vercel (both frontend and backend), MongoDB Atlas
+- **Other integrations:** Cloudinary (slide uploads)
+- **Playground execution:** `exec-service/` — a standalone WebSocket service that compiles/runs submitted code as a real child process and streams stdin/stdout live, for true interactive input (see `exec-service/README` section below)
+- **Hosting:** Vercel (frontend + main backend), Render (exec-service), MongoDB Atlas
 
 ## Local development
 
@@ -52,11 +53,28 @@ Required `.env` values:
 | `FRONT_END` | Frontend origin, for CORS |
 | `EMAIL_USER` / `EMAIL_PASS` | Gmail address + App Password, used to send OTP/invite-code emails |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_CALLBACK_URL` | Google OAuth sign-in |
-| `RAPIDAPI_KEY` | Judge0 (Playground code execution) |
 | `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | Slide file uploads |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_VERIFY_SERVICE_SID` | Phone number sign-up (SMS OTP) |
 
 > On Windows, if `mongoose.connect()` hangs on a `mongodb+srv://` URI locally, your machine's DNS resolver may not support the SRV/TXT lookup it needs — `back-end/index.js` already points Node's resolver at `8.8.8.8`/`1.1.1.1` outside of `NODE_ENV=production` to work around this.
+
+### exec-service (Playground code execution)
+
+A separate, always-on WebSocket service — can't run on Vercel serverless since it needs long-lived connections and real child processes. Deployed as its own Render Web Service using its own Dockerfile (installs gcc/g++, OpenJDK, Python 3).
+
+```bash
+cd exec-service
+npm install
+cp .env.example .env   # SECRET_KEY must match the main backend's
+npm start               # defaults to port 3001
+```
+
+| Variable | Purpose |
+|---|---|
+| `SECRET_KEY` | Same JWT signing secret as the main backend — verifies the token passed on the WebSocket handshake |
+| `FRONT_END` | Frontend origin, checked against the WebSocket handshake's `Origin` header |
+
+Runs each submission as a real, resource-limited child process (timeout, memory ceiling, output cap, no inherited secrets) rather than a per-run container — Render's standard web services don't expose a Docker daemon for nested containers. Adequate for a student-project trust level, not a hardened sandbox against a deliberately malicious user.
 
 ### Frontend
 
@@ -66,7 +84,7 @@ npm install
 npm run dev   # Vite dev server
 ```
 
-Set `VITE_API_URL` (e.g. in `front-end/.env`) to your backend URL, such as `http://localhost:3000`.
+Set `VITE_API_URL` (e.g. in `front-end/.env`) to your backend URL, such as `http://localhost:3000`, and `VITE_EXEC_API_URL` to the exec-service's WebSocket URL, such as `ws://localhost:3001`.
 
 ## Project structure
 
