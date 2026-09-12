@@ -34,12 +34,19 @@ const About = () => {
                   <div className="flex flex-col items-center">
                     <img
                       className="rounded-md w-full h-auto mb-3 max-w-[85%]"
-                      src="http://res.cloudinary.com/dyuw3dvko/image/upload/v1724371087/adil1_ugga81.jpg"
+                      src="/my.png"
                       alt="Adil"
                     />
                     <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Mohd Adil</h3>
                     <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
                     <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Mern stack, Back-end Developer</h4>
+                    <div className="flex flex-wrap justify-center gap-2 mb-4">
+                      {['C', 'C++', 'Python', 'MERN Stack'].map((skill) => (
+                        <span key={skill} className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                     <p className="font-medium mb-4 mt-0 font-sans">Changing the world, one commit at a time.</p>
                     <div className="flex flex-row justify-center">
                     <div className="p-6">
@@ -71,12 +78,19 @@ const About = () => {
                       <div className="flex flex-col items-center">
                         <img
                           className="rounded-md w-full h-auto mb-3 max-w-[85%]"
-                          src="/pallavi22.jpg"
+                          src="/pallavi22-new.png"
                           alt="Pallavi"
                         />
                         <h3 className="text-2xl font-bold text-gray-800 leading-snug mb-2 mt-0 font-sans">Pallavi Yadav</h3>
                         <h5 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Student, NIT Jamshedpur</h5>
                         <h4 className="text-xl font-medium leading-snug mb-2 mt-0 font-sans">Front-end Developer</h4>
+                        <div className="flex flex-wrap justify-center gap-2 mb-4">
+                          {['Front-end Development', 'UI/UX Design'].map((skill) => (
+                            <span key={skill} className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                         <p className="font-medium mb-4 mt-0 font-sans">Sleep over everything!</p>
                         <div className="flex flex-row justify-center">
                           <div className="p-6">
