@@ -39,7 +39,7 @@ const Subjects = () => {
 	return (
 		<Fragment>
 			<ReferenceDataContext.Provider value={{ url, setUrl, modalTitle, setModalTitle, showModal, setShowModal }}>
-				<Jumbotron title="Teacher's Section" description="Here are all the slides which you need..." />
+				<Jumbotron title="Teacher's Section" description="Browse the slides shared for this subject" />
 				<BackLink to={`/classroom/${course}/${year}/${semester}`} label="Back to Subjects" />
 				<div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 mb-12">
 					{loading && <p className="text-center text-gray-500 font-sans">Loading slides…</p>}

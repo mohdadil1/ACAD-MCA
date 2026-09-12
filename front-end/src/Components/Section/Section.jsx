@@ -8,15 +8,15 @@ const Section = () => {
 			<div className="card-deck">
 				<Card
 					title="Courses"
-					description="Find class notes, teacher's slides and other related stuffs"
+					description="Find class notes, teacher's slides, and other related resources"
 					link="/classroom"
 					linkText="Go to Courses"
 				/>
 				<Card
 					title="Coding Sheet "
-					description="Coding question for the companies"
+					description="Practice coding questions for company interviews"
 					link="/coding"
-					linkText="Placement"
+					linkText="Go to Coding Sheet"
 				/>
 				<Card
 					title="Playground"

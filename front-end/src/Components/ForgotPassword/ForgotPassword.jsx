@@ -50,7 +50,7 @@ function ForgetPassword() {
                      Back
                 </button>
 
-                <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">FORGET PASSWORD</h1>
+                <h1 className="text-center text-3xl font-extrabold text-gray-800 mb-8">FORGOT PASSWORD</h1>
                 
                 <form onSubmit={handleSubmit}>
                     <label className="block mb-2 text-gray-700 font-semibold">Email</label>

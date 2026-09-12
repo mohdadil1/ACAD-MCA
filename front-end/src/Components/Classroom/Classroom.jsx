@@ -41,7 +41,7 @@ const Classroom = () => {
         const courseName = course?.toUpperCase();
         return (
             <Fragment>
-                <Jumbotron title={`${courseName} Classroom`} description="Semester wise Teacher's Slides and notes..." />
+                <Jumbotron title={`${courseName} Classroom`} description="Semester-wise class notes and teacher's slides" />
                 <BackLink to="/classroom" label="Back to Courses" />
                 <div className="classroom">
                     <div className="text-center py-12 px-4">

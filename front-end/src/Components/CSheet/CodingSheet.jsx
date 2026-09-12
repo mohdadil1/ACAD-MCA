@@ -45,7 +45,7 @@ const CodingSheet = () => {
         <div>
           <Jumbotron
             title="Coding Sheet"
-            description="Sheet contains very handily crafted and picked top coding interview questions from different topics of Data Structures & Algorithms"
+            description="A curated set of top coding interview questions across key Data Structures & Algorithms topics"
           />
         </div>
         <div className="w-full max-w-sm mx-auto flex justify-end mb-4 py-2">
@@ -75,7 +75,7 @@ const CodingSheet = () => {
               )}
             </div>
           ))}
-          <h1 className='center text-2xl text-gray-400 font-light'>Update more soon....</h1>
+          <h1 className='center text-2xl text-gray-400 font-light'>More topics coming soon.</h1>
         </div>
         
       </div>
