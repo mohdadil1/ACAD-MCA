@@ -3,19 +3,18 @@ import { ReferenceDataContext } from "../../Components/Context/referenceDataCont
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../Modal/Modal.css';
 
-// Browsers have no built-in renderer for Office document formats (unlike
-// PDF, which Chrome/Firefox/Edge all render natively) -- route those
-// through Microsoft's free, no-signup Office Online Viewer, which can
-// render any publicly reachable .ppt/.pptx/.doc/.docx/.xls/.xlsx inline.
-const OFFICE_EXTENSIONS = ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'];
-
+// A raw PDF/PPT/DOC URL embedded directly in an <iframe> relies on the
+// browser's own viewer plugin, which iOS Safari renders inconsistently
+// (often blank, and always without a toolbar or download button) -- the
+// same reason the Google Drive-hosted MCA slides read fine while
+// teacher-uploaded ones don't: Drive's /preview is Google's own viewer app,
+// not the OS PDF plugin. Route every non-Drive file through that same
+// Google viewer so PDFs, PPT/PPTX and DOC/DOCX/XLS/XLSX all get the
+// identical toolbar, zoom and download behavior on every device.
 const getViewerSrc = (fileUrl) => {
     if (!fileUrl) return fileUrl;
-    const ext = fileUrl.split('?')[0].split('.').pop().toLowerCase();
-    if (OFFICE_EXTENSIONS.includes(ext)) {
-        return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-    }
-    return fileUrl;
+    if (fileUrl.includes('drive.google.com')) return fileUrl;
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
 };
 
 const Modal = () => {
