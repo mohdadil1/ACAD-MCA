@@ -13,6 +13,8 @@ const authHeaders = () => ({
 const emptyCourseForm = { key: '', name: '', description: '', years: 2 };
 const emptySubjectForm = { subjectName: '', subjectCode: '', credits: '' };
 const emptySlideForm = { heading: '', title: '', file: null };
+const emptyCodeForm = { title: '', description: '', filename: '', code: '' };
+const MAX_CODE_BYTES = 64 * 1024; // keep in sync with back-end/modals/CodeSnippet.js
 
 const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticated }) => {
   const navigate = useNavigate();
@@ -42,6 +44,15 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
   const [slideForm, setSlideForm] = useState(emptySlideForm);
   const [slideError, setSlideError] = useState('');
   const [uploading, setUploading] = useState(false);
+
+  const [codes, setCodes] = useState([]);
+  const [codesLoading, setCodesLoading] = useState(false);
+  const [codeForm, setCodeForm] = useState(emptyCodeForm);
+  const [codeError, setCodeError] = useState('');
+  const [savingCode, setSavingCode] = useState(false);
+  const [editingCodeId, setEditingCodeId] = useState(null);
+  const [expandedCodeId, setExpandedCodeId] = useState(null);
+  const [codeFileInputKey, setCodeFileInputKey] = useState(0);
 
   const loadCourses = async () => {
     setCoursesLoading(true);
@@ -93,9 +104,26 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
     }
   };
 
+  const loadCodes = async (subjectId) => {
+    setCodesLoading(true);
+    try {
+      const res = await axios.get(`${apiUrl}/subjects/${subjectId}/codes`, authHeaders());
+      setCodes(res.data);
+    } catch (err) {
+      setCodeError('Failed to load C programs.');
+    } finally {
+      setCodesLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (selectedSubject) {
       loadSlides(selectedSubject._id);
+      loadCodes(selectedSubject._id);
+      setCodeForm(emptyCodeForm);
+      setCodeError('');
+      setEditingCodeId(null);
+      setExpandedCodeId(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSubject]);
@@ -325,6 +353,97 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
       loadSlides(selectedSubject._id);
     } catch (err) {
       setSlideError(err.response?.data?.message || 'Failed to delete slide.');
+    }
+  };
+
+  // --- C program CRUD ---
+  const handleCodeFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setCodeError('');
+    if (!/\.(c|h)$/i.test(file.name)) {
+      setCodeError('Please choose a .c or .h file.');
+      setCodeFileInputKey((k) => k + 1);
+      return;
+    }
+    if (file.size > MAX_CODE_BYTES) {
+      setCodeError('File is too large (max 64 KB).');
+      setCodeFileInputKey((k) => k + 1);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCodeForm((prev) => ({
+        ...prev,
+        code: String(reader.result),
+        filename: file.name,
+        title: prev.title || file.name.replace(/\.(c|h)$/i, ''),
+      }));
+    };
+    reader.onerror = () => setCodeError('Could not read that file.');
+    reader.readAsText(file);
+  };
+
+  const resetCodeForm = () => {
+    setCodeForm(emptyCodeForm);
+    setEditingCodeId(null);
+    setCodeFileInputKey((k) => k + 1);
+  };
+
+  const handleSaveCode = async (e) => {
+    e.preventDefault();
+    setCodeError('');
+    if (!codeForm.code.trim()) {
+      setCodeError('Upload a .c file or paste the code.');
+      return;
+    }
+    if (new Blob([codeForm.code]).size > MAX_CODE_BYTES) {
+      setCodeError('Code is too large (max 64 KB).');
+      return;
+    }
+    setSavingCode(true);
+    try {
+      const payload = {
+        title: codeForm.title,
+        description: codeForm.description,
+        filename: codeForm.filename,
+        code: codeForm.code,
+      };
+      if (editingCodeId) {
+        await axios.put(`${apiUrl}/codes/${editingCodeId}`, payload, authHeaders());
+      } else {
+        await axios.post(`${apiUrl}/codes`, { ...payload, subject: selectedSubject._id }, authHeaders());
+      }
+      resetCodeForm();
+      loadCodes(selectedSubject._id);
+    } catch (err) {
+      setCodeError(err.response?.data?.message || 'Failed to save program.');
+    } finally {
+      setSavingCode(false);
+    }
+  };
+
+  const handleStartEditCode = (snippet) => {
+    setCodeError('');
+    setEditingCodeId(snippet._id);
+    setCodeForm({
+      title: snippet.title,
+      description: snippet.description || '',
+      filename: snippet.filename || '',
+      code: snippet.code,
+    });
+    setCodeFileInputKey((k) => k + 1);
+  };
+
+  const handleDeleteCode = async (snippet) => {
+    if (!window.confirm(`Delete program "${snippet.title}"?`)) return;
+    setCodeError('');
+    try {
+      await axios.delete(`${apiUrl}/codes/${snippet._id}`, authHeaders());
+      if (editingCodeId === snippet._id) resetCodeForm();
+      loadCodes(selectedSubject._id);
+    } catch (err) {
+      setCodeError(err.response?.data?.message || 'Failed to delete program.');
     }
   };
 
@@ -637,7 +756,7 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
                           onClick={() => { setSelectedSubject(subject); setSlideError(''); }}
                           className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
                         >
-                          Manage Slides
+                          Slides &amp; Code
                         </button>
                         <button
                           onClick={() => handleStartEditSubject(subject)}
@@ -730,6 +849,117 @@ const TeacherDashboard = ({ teacherName, setTeacherName, setIsTeacherAuthenticat
                   </div>
                 ))}
                 {slides.length === 0 && <p className="text-gray-500">No slides yet. Upload one above.</p>}
+              </div>
+            )}
+
+            {/* C programs */}
+            <h2 className="text-2xl font-bold text-gray-800 mt-12 mb-4">{selectedSubject.subjectName} — C Programs</h2>
+            {codeError && <p className="text-red-500 mb-4">{codeError}</p>}
+
+            <form onSubmit={handleSaveCode} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+              {editingCodeId && (
+                <p className="text-sm font-semibold text-brand-600 mb-3">Editing “{codeForm.title}”</p>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-600 mb-1">Title</label>
+                  <input
+                    value={codeForm.title}
+                    onChange={(e) => setCodeForm({ ...codeForm, title: e.target.value })}
+                    placeholder="e.g. Bubble sort"
+                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-600 mb-1">Description</label>
+                  <input
+                    value={codeForm.description}
+                    onChange={(e) => setCodeForm({ ...codeForm, description: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-600 mb-1">Upload .c file (optional)</label>
+                  <input
+                    key={codeFileInputKey}
+                    type="file"
+                    accept=".c,.h,text/x-c"
+                    onChange={handleCodeFileChange}
+                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+              </div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Code {codeForm.filename && <span className="font-normal text-gray-400">({codeForm.filename})</span>}
+              </label>
+              <textarea
+                value={codeForm.code}
+                onChange={(e) => setCodeForm({ ...codeForm, code: e.target.value })}
+                placeholder={'#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}'}
+                rows={12}
+                spellCheck={false}
+                className="w-full border border-gray-300 rounded-lg p-3 font-mono text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500 mb-3"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={savingCode}
+                  className={`bg-gradient-to-r from-brand-600 to-brand-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:from-brand-700 hover:to-brand-600 transition-all ${savingCode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {savingCode ? 'Saving…' : editingCodeId ? 'Save Changes' : 'Add Program'}
+                </button>
+                {editingCodeId && (
+                  <button
+                    type="button"
+                    onClick={resetCodeForm}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+
+            {codesLoading ? (
+              <p className="text-gray-500">Loading…</p>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {codes.map((snippet) => (
+                  <div key={snippet._id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-bold text-gray-800">{snippet.title}</h3>
+                        {snippet.description && <p className="text-sm text-gray-500">{snippet.description}</p>}
+                        {snippet.filename && <p className="text-xs text-gray-400 mt-1">{snippet.filename}</p>}
+                      </div>
+                      <div className="flex gap-2 flex-wrap">
+                        <button
+                          onClick={() => setExpandedCodeId(expandedCodeId === snippet._id ? null : snippet._id)}
+                          className="bg-brand-50 text-brand-600 hover:bg-brand-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          {expandedCodeId === snippet._id ? 'Hide' : 'View'}
+                        </button>
+                        <button
+                          onClick={() => handleStartEditCode(snippet)}
+                          className="bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCode(snippet)}
+                          className="bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-colors duration-200 font-semibold py-1.5 px-3 rounded-full text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                    {expandedCodeId === snippet._id && (
+                      <pre className="mt-4 bg-gray-900 text-gray-100 text-sm rounded-lg p-4 overflow-x-auto"><code>{snippet.code}</code></pre>
+                    )}
+                  </div>
+                ))}
+                {codes.length === 0 && <p className="text-gray-500">No C programs yet. Add one above.</p>}
               </div>
             )}
           </div>

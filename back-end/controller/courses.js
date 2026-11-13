@@ -1,6 +1,7 @@
 const Course = require('../modals/Course');
 const Subject = require('../modals/Subject');
 const { deleteSlidesForSubject } = require('./slides');
+const { deleteCodesForSubject } = require('./codes');
 
 const list = async (req, res) => {
   try {
@@ -55,6 +56,7 @@ const remove = async (req, res) => {
     const subjects = await Subject.find({ course: course._id });
     for (const subject of subjects) {
       await deleteSlidesForSubject(subject._id);
+      await deleteCodesForSubject(subject._id);
     }
     await Subject.deleteMany({ course: course._id });
     await course.deleteOne();

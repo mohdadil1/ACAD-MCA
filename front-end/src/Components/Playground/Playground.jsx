@@ -3,6 +3,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import Editor from '@monaco-editor/react';
+import { useLocation } from 'react-router-dom';
 import Jumbotron from '../UI/Jumbotron/Jumbotron';
 
 const LANGUAGES = [
@@ -43,8 +44,16 @@ const ENTER = '\r';
 const CTRL_C = '\x03';
 
 const Playground = () => {
-  const [language, setLanguage] = useState(LANGUAGES[0].id);
-  const [code, setCode] = useState(LANGUAGES[0].starter);
+  // Other pages (e.g. a subject's shared C programs) can open the playground
+  // pre-filled by navigating here with { language, code } in router state.
+  const location = useLocation();
+  const initial = location.state && LANGUAGES.some((l) => l.id === location.state.language)
+    && typeof location.state.code === 'string'
+    ? location.state
+    : null;
+
+  const [language, setLanguage] = useState(initial ? initial.language : LANGUAGES[0].id);
+  const [code, setCode] = useState(initial ? initial.code : LANGUAGES[0].starter);
   const [running, setRunning] = useState(false);
   const [status, setStatus] = useState('');
 

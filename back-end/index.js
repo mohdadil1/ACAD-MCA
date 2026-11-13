@@ -131,6 +131,14 @@ app.post('/slides/upload-signature', isAuthenticated, isTeacher, slides.getUploa
 app.post('/slides', isAuthenticated, isTeacher, slides.create);
 app.delete('/slides/:id', isAuthenticated, isTeacher, slides.remove);
 
+// C programs shared per subject (stored as text in MongoDB).
+const codes = require('./controller/codes');
+
+app.get('/subjects/:subjectId/codes', isAuthenticated, codes.listBySubject);
+app.post('/codes', isAuthenticated, isTeacher, codes.create);
+app.put('/codes/:id', isAuthenticated, isTeacher, codes.update);
+app.delete('/codes/:id', isAuthenticated, isTeacher, codes.remove);
+
 // Blog posts -- readable by any signed-in user, mutable only by teachers.
 const blogs = require('./controller/blogs');
 

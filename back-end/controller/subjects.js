@@ -1,6 +1,7 @@
 const Subject = require('../modals/Subject');
 const Course = require('../modals/Course');
 const { deleteSlidesForSubject } = require('./slides');
+const { deleteCodesForSubject } = require('./codes');
 
 const listByCourseAndSemester = async (req, res) => {
   try {
@@ -61,6 +62,7 @@ const remove = async (req, res) => {
       return res.status(404).json({ message: 'Subject not found' });
     }
     await deleteSlidesForSubject(subject._id);
+    await deleteCodesForSubject(subject._id);
     await subject.deleteOne();
     res.status(200).json({ message: 'Subject deleted' });
   } catch (err) {
